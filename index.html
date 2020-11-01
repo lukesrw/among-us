@@ -94,7 +94,7 @@
                                 name="hat"
                                 id="hat"
                                 class="form-control"
-                                onchange="updateHat()"
+                                onchange="updateCosmetic('hat')"
                             >
                                 <option value="">None</option>
                                 <optgroup label="Balloons">
@@ -445,7 +445,7 @@
                                 name="skin"
                                 id="skin"
                                 class="form-control"
-                                onchange="updateSkin()"
+                                onchange="updateCosmetic('skin')"
                             >
                                 <option value="">None</option>
                                 <option value="./img/skin/alice.png">
@@ -540,6 +540,84 @@
                                 Set Hat
                             </button>
                         </div>
+                        <label for="pet" class="mt-2">Pet</label>
+                        <select
+                            name="pet"
+                            id="pet"
+                            class="form-control"
+                            onchange="updateCosmetic('pet')"
+                        >
+                            <option value="" selected>None</option>
+                            <optgroup label="Tiny Crewmates">
+                                <option value="./img/pet/mini.png">
+                                    White
+                                </option>
+                                <option value="./img/pet/mini2.png">
+                                    Black
+                                </option>
+                                <option value="./img/pet/mini3.png">
+                                    Blue
+                                </option>
+                                <option value="./img/pet/mini4.png">
+                                    Brown
+                                </option>
+                                <option value="./img/pet/mini5.png">
+                                    Cyan
+                                </option>
+                                <option value="./img/pet/mini6.png">
+                                    Green
+                                </option>
+                                <option value="./img/pet/mini7.png">
+                                    Lime
+                                </option>
+                                <option value="./img/pet/mini8.png">
+                                    Orange
+                                </option>
+                                <option value="./img/pet/mini9.png">
+                                    Pink
+                                </option>
+                                <option value="./img/pet/mini10.png">
+                                    Purple
+                                </option>
+                                <option value="./img/pet/mini11.png">
+                                    Red
+                                </option>
+                                <option value="./img/pet/mini12.png">
+                                    Yellow
+                                </option>
+                                <option value="./img/pet/robot.png">
+                                    Not WALL-E
+                                </option>
+                            </optgroup>
+                            <optgroup label="Not Headcrabs">
+                                <option value="./img/pet/bedcrab.png">
+                                    Squig
+                                </option>
+                                <option value="./img/pet/bedcrab2.png">
+                                    Bedcrab
+                                </option>
+                            </optgroup>
+                            <optgroup label="Aliens">
+                                <option value="./img/pet/brainslug.png">
+                                    Brainslug
+                                </option>
+                                <option value="./img/pet/ufo.png">UFO</option>
+                            </optgroup>
+                            <optgroup label="Real Pets">
+                                <option value="./img/pet/dog.png">Dog</option>
+                                <option value="./img/pet/hamster.png">
+                                    Hamster
+                                </option>
+                            </optgroup>
+                            <optgroup label="Stickmin">
+                                <option value="./img/pet/stickman.png">
+                                    Henry
+                                </option>
+                                <option value="./img/pet/stickwoman.png">
+                                    Ellie
+                                </option>
+                            </optgroup>
+                        </select>
                     </div>
 
                     <div class="form-group">
