@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>Among Us - Player Image</title>
+
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+            crossorigin="anonymous"
+        />
+
+        <link rel="stylesheet" href="./css/style.css" />
+        <script src="./js/custom.js"></script>
+    </head>
+    <body>
+        <div id="container" class="container-fluid pt-3 vh-100">
+            <div class="row h-100">
+                <aside class="col-lg-2">
+                    <div class="form-group">
+                        <label for="background">Background</label>
+                        <select
+                            name="background"
+                            id="background"
+                            class="form-control"
+                            onchange="updateBackground()"
+                        >
+                            <optgroup label="Colours">
+                                <option value="#ffffff">White</option>
+                                <option value="#ffffff00">Transparent</option>
+                                <option value="#000000">Black</option>
+                                <option value="custom-color">Custom</option>
+                            </optgroup>
+                            <optgroup label="Crewmates">
+                                <option value="#d7deee">White</option>
+                                <option value="#a8b1ba">Grey</option>
+                                <option value="#444e57">Black</option>
+                                <option value="#1d35cf">Blue</option>
+                                <option value="#734b23">Brown</option>
+                                <option value="#3bf8dc">Cyan</option>
+                                <option value="#158130">Green</option>
+                                <option value="#51ec3d">Lime</option>
+                                <option value="#f07e0e">Orange</option>
+                                <option value="#ea59bc">Pink</option>
+                                <option value="#6e33b9">Purple</option>
+                                <option value="#c51615">Red</option>
+                                <option value="#f2f05f">Yellow</option>
+                            </optgroup>
+                            <optgroup label="Images">
+                                <option
+                                    value="./img/background/game.jpg"
+                                    selected
+                                >
+                                    Title
+                                </option>
+                                <option value="./img/background/space.png">
+                                    Space
+                                </option>
+                                <option value="./img/background/skeld.jpg">
+                                    The Skeld
+                                </option>
+                                <option value="./img/background/mira.jpg">
+                                    MIRA HQ
+                                </option>
+                                <option value="./img/background/polus.jpg">
+                                    Polus
+                                </option>
+                                <option value="custom-image">Custom</option>
+                            </optgroup>
+                        </select>
+                        <input
+                            type="text"
+                            class="form-control d-none mt-2"
+                            name="background-custom-image"
+                            id="background-custom-image"
+                            onchange="updateBackground()"
+                        />
+                        <input
+                            type="color"
+                            name="background-custom-color"
+                            id="background-custom-color"
+                            onchange="updateBackground()"
+                            class="form-control d-none mt-2"
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="hat">Hat</label>
+                        <div class="input-group">
+                            <select
+                                name="hat"
+                                id="hat"
+                                class="form-control"
+                                onchange="updateHat()"
+                            >
+                                <option value="">None</option>
+                                <optgroup label="Balloons">
+                                    <option value="./img/hat/balloon8.png">
+                                        White
+                                    </option>
+                                    <option value="./img/hat/balloon7.png">
+                                        Black
+                                    </option>
+                                    <option value="./img/hat/balloon3.png">
+                                        Blue
+                                    </option>
+                                    <option value="./img/hat/balloon10.png">
+                                        Brown
+                                    </option>
+                                    <option value="./img/hat/balloon11.png">
+                                        Cyan
+                                    </option>
+                                    <option value="./img/hat/balloon4.png">
+                                        Green
+                                    </option>
+                                    <option value="./img/hat/balloon12.png">
+                                        Lime
+                                    </option>
+                                    <option value="./img/hat/balloon5.png">
+                                        Orange
+                                    </option>
+                                    <option value="./img/hat/balloon1.png">
+                                        Pink
+                                    </option>
+                                    <option value="./img/hat/balloon9.png">
+                                        Purple
+                                    </option>
+                                    <option value="./img/hat/balloon2.png">
+                                        Red
+                                    </option>
+                                    <option value="./img/hat/balloon6.png">
+                                        Yellow
+                                    </option>
+                                </optgroup>
+                                <optgroup label="Mini Crewmates">
+                                    <option value="./img/hat/crewmate11.png">
+                                        White
+                                    </option>
+                                    <option value="./img/hat/crewmate2.png">
+                                        Black
+                                    </option>
+                                    <option value="./img/hat/crewmate3.png">
+                                        Blue
+                                    </option>
+                                    <option value="./img/hat/crewmate4.png">
+                                        Brown
+                                    </option>
+                                    <option value="./img/hat/crewmate5.png">
+                                        Cyan
+                                    </option>
+                                    <option value="./img/hat/crewmate6.png">
+                                        Green
+                                    </option>
+                                    <option value="./img/hat/crewmate7.png">
+                                        Lime
+                                    </option>
+                                    <option value="./img/hat/crewmate8.png">
+                                        Orange
+                                    </option>
+                                    <option value="./img/hat/crewmate9.png">
+                                        Pink
+                                    </option>
+                                    <option value="./img/hat/crewmate10.png">
+                                        Purple
+                                    </option>
+                                    <option value="./img/hat/crewmate.png">
+                                        Red
+                                    </option>
+                                    <option value="./img/hat/crewmate12.png">
+                                        Yellow
+                                    </option>
+                                </optgroup>
+                                <option value="./img/hat/alice.png">
+                                    Alice
+                                </option>
+                                <option value="./img/hat/alien.png">
+                                    Alien
+                                </option>
+                                <option value="./img/hat/anthena.png">
+                                    Anthena
+                                </option>
+                                <option value="./img/hat/astro.png">
+                                    Astro
+                                </option>
+                                <option value="./img/hat/bag.png">Bag</option>
+                                <option value="./img/hat/banana.png">
+                                    Banana
+                                </option>
+                                <option value="./img/hat/bandana.png">
+                                    Bandana
+                                </option>
+                                <option value="./img/hat/bat.png">Bat</option>
+                                <option value="./img/hat/beanie.png">
+                                    Beanie
+                                </option>
+                                <option value="./img/hat/bear.png">Bear</option>
+                                <option value="./img/hat/beret.png">
+                                    Beret
+                                </option>
+                                <option value="./img/hat/birthday.png">
+                                    Birthday
+                                </option>
+                                <option value="./img/hat/black.png">
+                                    Black
+                                </option>
+                                <option value="./img/hat/brows.png">
+                                    Brows
+                                </option>
+                                <option value="./img/hat/cap.png">Cap</option>
+                                <option value="./img/hat/captain.png">
+                                    Captain
+                                </option>
+                                <option value="./img/hat/cat.png">Cat</option>
+                                <option value="./img/hat/cheese.png">
+                                    Cheese
+                                </option>
+                                <option value="./img/hat/chef.png">Chef</option>
+                                <option value="./img/hat/cherry.png">
+                                    Cherry
+                                </option>
+                                <option value="./img/hat/cop.png">Cop</option>
+                                <option value="./img/hat/cowboy.png">
+                                    Cowboy
+                                </option>
+                                <option value="./img/hat/crown.png">
+                                    Crown
+                                </option>
+                                <option value="./img/hat/cuervo.png">
+                                    Cuervo
+                                </option>
+                                <option value="./img/hat/devil.png">
+                                    Devil
+                                </option>
+                                <option value="./img/hat/doctor.png">
+                                    Doctor
+                                </option>
+                                <option value="./img/hat/double.png">
+                                    Double
+                                </option>
+                                <option value="./img/hat/drain.png">
+                                    Drain
+                                </option>
+                                <option value="./img/hat/egg.png">Egg</option>
+                                <option value="./img/hat/elmer.png">
+                                    Elmer
+                                </option>
+                                <option value="./img/hat/eye.png">Eye</option>
+                                <option value="./img/hat/fez.png">Fez</option>
+                                <option value="./img/hat/flamingo.png">
+                                    Flamingo
+                                </option>
+                                <option value="./img/hat/flower.png">
+                                    Flower
+                                </option>
+                                <option value="./img/hat/flowerpot.png">
+                                    Flower Pot
+                                </option>
+                                <option value="./img/hat/freeze.png">
+                                    Freeze
+                                </option>
+                                <option value="./img/hat/gasmask.png">
+                                    Gasmask
+                                </option>
+                                <option value="./img/hat/goggles.png">
+                                    Goggles
+                                </option>
+                                <option value="./img/hat/goggles2.png">
+                                    Other Goggles
+                                </option>
+                                <option value="./img/hat/green.png">
+                                    Green
+                                </option>
+                                <option value="./img/hat/hades.png">
+                                    Hades
+                                </option>
+                                <option value="./img/hat/halo.png">Halo</option>
+                                <option value="./img/hat/hawk.png">Hawk</option>
+                                <option value="./img/hat/headband.png">
+                                    Headband
+                                </option>
+                                <option value="./img/hat/headphones.png">
+                                    Headphones
+                                </option>
+                                <option value="./img/hat/helmet.png">
+                                    Helmet
+                                </option>
+                                <option value="./img/hat/hercules.png">
+                                    Hercules
+                                </option>
+                                <option value="./img/hat/horns.png">
+                                    Horns
+                                </option>
+                                <option value="./img/hat/jason.png">
+                                    Jason
+                                </option>
+                                <option value="./img/hat/knife.png">
+                                    Knife
+                                </option>
+                                <option value="./img/hat/link.png">Link</option>
+                                <option value="./img/hat/madhatter.png">
+                                    Mad Hatter
+                                </option>
+                                <option value="./img/hat/mask.png">Mask</option>
+                                <option value="./img/hat/megara.png">
+                                    Megara
+                                </option>
+                                <option value="./img/hat/military.png">
+                                    Military
+                                </option>
+                                <option value="./img/hat/miner.png">
+                                    Miner
+                                </option>
+                                <option value="./img/hat/morty.png">
+                                    Morty
+                                </option>
+                                <option value="./img/hat/nest.png">Nest</option>
+                                <option value="./img/hat/ninja.png">
+                                    Ninja
+                                </option>
+                                <option value="./img/hat/paperhat.png">
+                                    Paper
+                                </option>
+                                <option value="./img/hat/party.png">
+                                    Party
+                                </option>
+                                <option value="./img/hat/pilot.png">
+                                    Pilot
+                                </option>
+                                <option value="./img/hat/pirate.png">
+                                    Pirate
+                                </option>
+                                <option value="./img/hat/plant.png">
+                                    Plant
+                                </option>
+                                <option value="./img/hat/police.png">
+                                    Police
+                                </option>
+                                <option value="./img/hat/pompadour.png">
+                                    Pompadour
+                                </option>
+                                <option value="./img/hat/postit.png">
+                                    Postit
+                                </option>
+                                <option value="./img/hat/redqueen.png">
+                                    Red Queen
+                                </option>
+                                <option value="./img/hat/rick.png">Rick</option>
+                                <option value="./img/hat/safari.png">
+                                    Safari
+                                </option>
+                                <option value="./img/hat/security.png">
+                                    Security
+                                </option>
+                                <option value="./img/hat/sheriff.png">
+                                    Sheriff
+                                </option>
+                                <option value="./img/hat/sign.png">Sign</option>
+                                <option value="./img/hat/snorkel.png">
+                                    Snorkel
+                                </option>
+                                <option value="./img/hat/snow.png">Snow</option>
+                                <optgroup label="Christmas">
+                                    <option value="./img/hat/antlers.png">
+                                        Antlers
+                                    </option>
+                                    <option value="./img/hat/cane.png">
+                                        Candy Canes
+                                    </option>
+                                    <option value="./img/hat/lights.png">
+                                        Lights
+                                    </option>
+                                    <option value="./img/hat/present.png">
+                                        Present
+                                    </option>
+                                    <option value="./img/hat/santa.png">
+                                        Santa
+                                    </option>
+                                    <option value="./img/hat/snowman.png">
+                                        Snowman
+                                    </option>
+                                    <option value="./img/hat/xmas.png">
+                                        Tree
+                                    </option>
+                                </optgroup>
+                                <option value="./img/hat/soldier.png">
+                                    Soldier
+                                </option>
+                                <option value="./img/hat/stickman.png">
+                                    Stickman
+                                </option>
+                                <option value="./img/hat/stpatrick.png">
+                                    St Patrick
+                                </option>
+                                <option value="./img/hat/sunglasses.png">
+                                    Sun Glasses
+                                </option>
+                                <option value="./img/hat/paper.png">
+                                    Toilet Paper
+                                </option>
+                                <option value="./img/hat/tophat.png">
+                                    Top Hat
+                                </option>
+                                <option value="./img/hat/towel.png">
+                                    Towel
+                                </option>
+                                <option value="./img/hat/ushanka.png">
+                                    Ushanka
+                                </option>
+                                <option value="./img/hat/viking.png">
+                                    Viking
+                                </option>
+                                <option value="./img/hat/whitehat.png">
+                                    White
+                                </option>
+                                <option value="./img/hat/whiterabbit.png">
+                                    White Rabbit
+                                </option>
+                                <option value="./img/hat/wildwest.png">
+                                    Wild West
+                                </option>
+                                <option value="./img/hat/winter.png">
+                                    Winter
+                                </option>
+                                <option value="./img/hat/witch.png">
+                                    Witch
+                                </option>
+                                <option value="./img/hat/wolf.png">Wolf</option>
+                                <option value="./img/hat/worker.png">
+                                    Worker
+                                </option>
+                            </select>
+                            <button
+                                class="btn btn-secondary ml-2 d-none"
+                                onclick="setSkin()"
+                            >
+                                Set Skin
+                            </button>
+                        </div>
+                        <label for="skin" class="mt-2">Skin</label>
+                        <div class="input-group">
+                            <select
+                                name="skin"
+                                id="skin"
+                                class="form-control"
+                                onchange="updateSkin()"
+                            >
+                                <option value="">None</option>
+                                <option value="./img/skin/alice.png">
+                                    Alice
+                                </option>
+                                <option value="./img/skin/astro.png">
+                                    Astro
+                                </option>
+                                <option value="./img/skin/azul.png">
+                                    Azul
+                                </option>
+                                <option value="./img/skin/ballerina.png">
+                                    Ballerina
+                                </option>
+                                <option value="./img/skin/captain.png">
+                                    Captain
+                                </option>
+                                <option value="./img/skin/doctor.png">
+                                    Doctor
+                                </option>
+                                <option value="./img/skin/explorer.png">
+                                    Explorer
+                                </option>
+                                <option value="./img/skin/hades.png">
+                                    Hades
+                                </option>
+                                <option value="./img/skin/hearts.png">
+                                    Hearts
+                                </option>
+                                <option value="./img/skin/hercules.png">
+                                    Hercules
+                                </option>
+                                <option value="./img/skin/jacket.png">
+                                    Jacket
+                                </option>
+                                <option value="./img/skin/latex.png">
+                                    Latex
+                                </option>
+                                <option value="./img/skin/madhatter.png">
+                                    Madhatter
+                                </option>
+                                <option value="./img/skin/mechanic.png">
+                                    Mechanic
+                                </option>
+                                <option value="./img/skin/megara.png">
+                                    Megara
+                                </option>
+                                <option value="./img/skin/military.png">
+                                    Military
+                                </option>
+                                <option value="./img/skin/miner.png">
+                                    Miner
+                                </option>
+                                <option value="./img/skin/morada.png">
+                                    Morada
+                                </option>
+                                <option value="./img/skin/morty.png">
+                                    Morty
+                                </option>
+                                <option value="./img/skin/police.png">
+                                    Police
+                                </option>
+                                <option value="./img/skin/redqueen.png">
+                                    Redqueen
+                                </option>
+                                <option value="./img/skin/rick.png">
+                                    Rick
+                                </option>
+                                <option value="./img/skin/security.png">
+                                    Security
+                                </option>
+                                <option value="./img/skin/suit.png">
+                                    Suit
+                                </option>
+                                <option value="./img/skin/white.png">
+                                    White
+                                </option>
+                                <option value="./img/skin/whiterabbit.png">
+                                    Whiterabbit
+                                </option>
+                                <option value="./img/skin/winter.png">
+                                    Winter
+                                </option>
+                                <option value="./img/skin/worker.png">
+                                    Worker
+                                </option>
+                            </select>
+                            <button
+                                class="btn btn-secondary ml-2 d-none"
+                                onclick="setHat()"
+                            >
+                                Set Hat
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="shadow">Shadow</label>
+                        <select
+                            name="shadow"
+                            id="shadow"
+                            class="form-control"
+                            onchange="render()"
+                        >
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <a
+                            href="#"
+                            class="btn btn-success btn-block"
+                            download="avatar.png"
+                            onclick="save(this)"
+                            >Download</a
+                        >
+                    </div>
+                </aside>
+                <main class="col">
+                    <div class="container">
+                        <canvas id="canvas" class="d-block mx-auto"></canvas>
+                    </div>
+                </main>
+                <aside class="col-lg-2">
+                    <div class="form-group">
+                        <label for="style">Style</label>
+                        <select
+                            name="style"
+                            id="style"
+                            class="form-control"
+                            onchange="updateStyle()"
+                        >
+                            <option value="Normal" selected>Normal</option>
+                            <option value="Linear">Linear</option>
+                            <option value="Radial">Radial</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="color">Colour</label>
+                        <select
+                            name="color"
+                            id="color"
+                            class="form-control"
+                            onchange="updateColor(inputs.color, inputs.color_custom)"
+                        >
+                            <optgroup label="Colours">
+                                <option value="#ffffff">White</option>
+                                <option value="#ffffff00">Transparent</option>
+                                <option value="#000000">Black</option>
+                                <option value="custom">Custom</option>
+                            </optgroup>
+                            <optgroup label="Crewmates">
+                                <option value="#d7deee" selected>White</option>
+                                <option value="#a8b1ba">Grey</option>
+                                <option value="#444e57">Black</option>
+                                <option value="#1d35cf">Blue</option>
+                                <option value="#734b23">Brown</option>
+                                <option value="#3bf8dc">Cyan</option>
+                                <option value="#158130">Green</option>
+                                <option value="#51ec3d">Lime</option>
+                                <option value="#f07e0e">Orange</option>
+                                <option value="#ea59bc">Pink</option>
+                                <option value="#6e33b9">Purple</option>
+                                <option value="#c51615">Red</option>
+                                <option value="#f2f05f">Yellow</option>
+                            </optgroup>
+                        </select>
+                        <input
+                            type="color"
+                            name="color-custom"
+                            id="color-custom"
+                            value="#c51615"
+                            class="form-control mt-2 d-none"
+                            onchange="render()"
+                        />
+
+                        <div class="form-group d-none mt-2" id="linear1">
+                            <label for="start-x-val">Colour X</label>
+                            <div class="input-group mb-1">
+                                <input
+                                    type="number"
+                                    name="start-x-val"
+                                    id="start-x-val"
+                                    class="form-control mr-2 col-4"
+                                    min="0"
+                                    value="300"
+                                    max="600"
+                                    oninput="updateSlider(this)"
+                                />
+                                <input
+                                    type="range"
+                                    name="start-x"
+                                    id="start-x"
+                                    min="0"
+                                    value="0"
+                                    max="600"
+                                    class="form-control ml-2"
+                                    oninput="updateInput(this)"
+                                />
+                            </div>
+                            <label for="start-y-val">Colour Y</label>
+                            <div class="input-group">
+                                <input
+                                    type="number"
+                                    name="start-y-val"
+                                    id="start-y-val"
+                                    class="form-control mr-2 col-4"
+                                    min="0"
+                                    value="0"
+                                    max="600"
+                                    oninput="updateSlider(this)"
+                                />
+                                <input
+                                    type="range"
+                                    name="start-y"
+                                    id="start-y"
+                                    min="0"
+                                    value="0"
+                                    max="600"
+                                    class="form-control ml-2"
+                                    oninput="updateInput(this)"
+                                />
+                            </div>
+                            <div class="form-group mt-2 d-none" id="radial1">
+                                <label for="radial1-val">Colour Radius</label>
+                                <input
+                                    type="number"
+                                    name="radial1-val"
+                                    id="radial1-val"
+                                    class="form-control"
+                                    onchange="render()"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="color-two" class="form-group d-none">
+                        <label for="color2">Colour Two</label>
+                        <select
+                            name="color2"
+                            id="color2"
+                            class="form-control"
+                            onchange="updateColor(inputs.color2, inputs.color_custom2)"
+                        >
+                            <option value="#d7deee" selected>White</option>
+                            <option value="#a8b1ba">Grey</option>
+                            <option value="#444e57">Black</option>
+                            <option value="#1d35cf">Blue</option>
+                            <option value="#734b23">Brown</option>
+                            <option value="#3bf8dc">Cyan</option>
+                            <option value="#158130">Green</option>
+                            <option value="#51ec3d">Lime</option>
+                            <option value="#f07e0e">Orange</option>
+                            <option value="#ea59bc">Pink</option>
+                            <option value="#6e33b9">Purple</option>
+                            <option value="#c51615">Red</option>
+                            <option value="#f2f05f">Yellow</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                        <input
+                            type="color"
+                            name="color-custom2"
+                            id="color-custom2"
+                            value="#c51615"
+                            class="form-control mt-2 d-none"
+                            oninput="render()"
+                        />
+                        <div class="form-group d-none mt-2" id="linear2">
+                            <label for="end-x-val">Colour 2 X</label>
+                            <div class="input-group mb-1">
+                                <input
+                                    type="number"
+                                    name="end-x-val"
+                                    id="end-x-val"
+                                    class="form-control mr-2 col-4"
+                                    min="0"
+                                    value="300"
+                                    max="600"
+                                    oninput="updateSlider(this)"
+                                />
+                                <input
+                                    type="range"
+                                    name="end-x"
+                                    id="end-x"
+                                    min="0"
+                                    value="600"
+                                    max="600"
+                                    class="form-control ml-2"
+                                    oninput="updateInput(this)"
+                                />
+                            </div>
+                            <label for="end-y-val">Colour 2 Y</label>
+                            <div class="input-group">
+                                <input
+                                    type="number"
+                                    name="end-y-val"
+                                    id="end-y-val"
+                                    class="form-control mr-2 col-4"
+                                    min="0"
+                                    value="600"
+                                    max="600"
+                                    oninput="updateSlider(this)"
+                                />
+                                <input
+                                    type="range"
+                                    name="end-y"
+                                    id="end-y"
+                                    min="0"
+                                    value="600"
+                                    max="600"
+                                    class="form-control ml-2"
+                                    oninput="updateInput(this)"
+                                />
+                                <div
+                                    class="form-group mt-2 d-none"
+                                    id="radial2"
+                                >
+                                    <label for="radial2-val"
+                                        >Colour 2 Radius</label
+                                    >
+                                    <input
+                                        type="number"
+                                        name="radial2-val"
+                                        id="radial2-val"
+                                        class="form-control"
+                                        onchange="render()"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </body>
+</html>
