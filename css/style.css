@@ -1,0 +1,31 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,700&display=swap");
+
+html,
+body {
+    font-family: "Space Mono", monospace;
+    font-weight: 400;
+    font-size: 13pt;
+    background-image: url("../img/background.png");
+    background-size: cover;
+    background-position: center center;
+}
+
+.btn,
+label {
+    font-weight: 600;
+}
+
+canvas,
+#container > .row > aside > div {
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+#container > .row > aside > div {
+    background: #fff;
+    padding: 1rem;
+}
+
+#container .form-group .form-group {
+    margin-bottom: 0;
+}
