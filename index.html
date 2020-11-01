@@ -642,7 +642,7 @@
                                     name="start-x"
                                     id="start-x"
                                     min="0"
-                                    value="0"
+                                    value="300"
                                     max="600"
                                     class="form-control ml-2"
                                     oninput="updateInput(this)"
@@ -678,6 +678,7 @@
                                     name="radial1-val"
                                     id="radial1-val"
                                     class="form-control"
+                                    value="180"
                                     onchange="render()"
                                 />
                             </div>
@@ -692,20 +693,27 @@
                             class="form-control"
                             onchange="updateColor(inputs.color2, inputs.color_custom2)"
                         >
-                            <option value="#d7deee" selected>White</option>
-                            <option value="#a8b1ba">Grey</option>
-                            <option value="#444e57">Black</option>
-                            <option value="#1d35cf">Blue</option>
-                            <option value="#734b23">Brown</option>
-                            <option value="#3bf8dc">Cyan</option>
-                            <option value="#158130">Green</option>
-                            <option value="#51ec3d">Lime</option>
-                            <option value="#f07e0e">Orange</option>
-                            <option value="#ea59bc">Pink</option>
-                            <option value="#6e33b9">Purple</option>
-                            <option value="#c51615">Red</option>
-                            <option value="#f2f05f">Yellow</option>
-                            <option value="custom">Custom</option>
+                            <optgroup label="Colours">
+                                <option value="#ffffff">White</option>
+                                <option value="#ffffff00">Transparent</option>
+                                <option value="#000000">Black</option>
+                                <option value="custom">Custom</option>
+                            </optgroup>
+                            <optgroup label="Crewmates">
+                                <option value="#d7deee" selected>White</option>
+                                <option value="#a8b1ba">Grey</option>
+                                <option value="#444e57">Black</option>
+                                <option value="#1d35cf">Blue</option>
+                                <option value="#734b23">Brown</option>
+                                <option value="#3bf8dc">Cyan</option>
+                                <option value="#158130">Green</option>
+                                <option value="#51ec3d">Lime</option>
+                                <option value="#f07e0e">Orange</option>
+                                <option value="#ea59bc">Pink</option>
+                                <option value="#6e33b9">Purple</option>
+                                <option value="#c51615">Red</option>
+                                <option value="#f2f05f">Yellow</option>
+                            </optgroup>
                         </select>
                         <input
                             type="color"
@@ -733,7 +741,7 @@
                                     name="end-x"
                                     id="end-x"
                                     min="0"
-                                    value="600"
+                                    value="300"
                                     max="600"
                                     class="form-control ml-2"
                                     oninput="updateInput(this)"
@@ -773,6 +781,7 @@
                                         name="radial2-val"
                                         id="radial2-val"
                                         class="form-control"
+                                        value="180"
                                         onchange="render()"
                                     />
                                 </div>
