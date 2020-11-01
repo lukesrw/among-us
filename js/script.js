@@ -13,16 +13,6 @@ var color_two;
 var canvas;
 var context;
 var inputs = {};
-var crop = {
-    height: 384,
-    left: 154,
-    top: 190,
-    width: 278,
-    x1: 10,
-    x2: 156,
-    y1: 30,
-    y2: 93
-};
 
 /**
  * @param {string} name for reference
@@ -166,7 +156,7 @@ function updateCosmetic(category) {
             inputs.skin.nextElementSibling.classList.toggle(
                 "d-none",
                 !document.querySelector(
-                    '#skin [value$="' +
+                    '#hat [value$="' +
                         cosmetic.skin.substr(cosmetic.skin.lastIndexOf("/")) +
                         '"]'
                 )
@@ -294,8 +284,8 @@ document.addEventListener("DOMContentLoaded", function () {
     radial1 = document.getElementById("radial1");
     radial2 = document.getElementById("radial2");
 
-    inputs.pet = document.getElementById("pet");
     inputs.style = document.getElementById("style");
+    inputs.pet = document.getElementById("pet");
     inputs.shadow = document.getElementById("shadow");
     inputs.color = document.getElementById("color");
     inputs.color2 = document.getElementById("color2");
