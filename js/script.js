@@ -4,8 +4,7 @@
 
 var img = {};
 var background;
-var hat;
-var skin;
+var cosmetic = {};
 var linear1;
 var linear2;
 var radial1;
@@ -117,8 +116,9 @@ function render() {
         context.globalAlpha = 1;
 
         drawImage("border");
-        if (hat) drawImage("hat");
-        if (skin) drawImage("skin");
+        Object.keys(cosmetic).forEach(function (category) {
+            if (cosmetic[category]) drawImage(category);
+        });
 
         context.globalCompositeOperation = "destination-over";
         if (background.substr(0, 1) === "#") {
@@ -155,42 +155,39 @@ function updateColor(input1, input2) {
 }
 
 /**
+ * @param {string} category name
  * @returns {void}
  */
-function updateHat() {
-    hat = inputs.hat.value;
+function updateCosmetic(category) {
+    cosmetic[category] = inputs[category].value;
 
-    inputs.hat.nextElementSibling.classList.toggle(
-        "d-none",
-        !document.querySelector(
-            '#skin [value$="' + hat.substr(hat.lastIndexOf("/")) + '"]'
-        )
-    );
+    switch (category) {
+        case "skin":
+            inputs.skin.nextElementSibling.classList.toggle(
+                "d-none",
+                !document.querySelector(
+                    '#skin [value$="' +
+                        cosmetic.skin.substr(cosmetic.skin.lastIndexOf("/")) +
+                        '"]'
+                )
+            );
+            break;
 
-    delete img.hat;
-    if (hat) {
-        getImg("hat", hat);
-    } else {
-        render();
+        case "hat":
+            inputs.hat.nextElementSibling.classList.toggle(
+                "d-none",
+                !document.querySelector(
+                    '#skin [value$="' +
+                        cosmetic.hat.substr(cosmetic.hat.lastIndexOf("/")) +
+                        '"]'
+                )
+            );
+            break;
     }
-}
 
-/**
- * @returns {void}
- */
-function updateSkin() {
-    skin = inputs.skin.value;
-
-    inputs.skin.nextElementSibling.classList.toggle(
-        "d-none",
-        !document.querySelector(
-            '#skin [value$="' + skin.substr(skin.lastIndexOf("/")) + '"]'
-        )
-    );
-
-    delete img.skin;
-    if (skin) {
-        getImg("skin", skin);
+    delete img[category];
+    if (cosmetic[category]) {
+        getImg(category, cosmetic[category]);
     } else {
         render();
     }
@@ -201,9 +198,11 @@ function updateSkin() {
  */
 function setSkin() {
     document.querySelector(
-        '#skin [value$="' + hat.substr(hat.lastIndexOf("/")) + '"]'
+        '#skin [value$="' +
+            cosmetic.hat.substr(cosmetic.hat.lastIndexOf("/")) +
+            '"]'
     ).selected = true;
-    updateSkin();
+    updateCosmetic("skin");
 }
 
 /**
@@ -211,9 +210,11 @@ function setSkin() {
  */
 function setHat() {
     document.querySelector(
-        '#hat [value$="' + skin.substr(skin.lastIndexOf("/")) + '"]'
+        '#hat [value$="' +
+            cosmetic.skin.substr(cosmetic.skin.lastIndexOf("/")) +
+            '"]'
     ).selected = true;
-    updateHat();
+    updateCosmetic("hat");
 }
 
 /**
@@ -293,6 +294,7 @@ document.addEventListener("DOMContentLoaded", function () {
     radial1 = document.getElementById("radial1");
     radial2 = document.getElementById("radial2");
 
+    inputs.pet = document.getElementById("pet");
     inputs.style = document.getElementById("style");
     inputs.shadow = document.getElementById("shadow");
     inputs.color = document.getElementById("color");
@@ -321,9 +323,9 @@ document.addEventListener("DOMContentLoaded", function () {
     getImg("overlay");
 
     updateBackground();
-    updateStyle();
-    updateSkin();
-    updateHat();
+    updateCosmetic("skin");
+    updateCosmetic("hat");
+    updateCosmetic("pet");
     updateColor(inputs.color, inputs.color_custom);
     updateColor(inputs.color2, inputs.color_custom2);
 });
