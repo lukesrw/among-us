@@ -7,6 +7,7 @@ var background;
 var cosmetic = {};
 var linear1;
 var linear2;
+var text;
 var radial1;
 var radial2;
 var color_two;
@@ -15,27 +16,46 @@ var context;
 var inputs = {};
 
 /**
+ * controls without UI
+ */
+var text_offset = 64;
+
+/**
  * @param {string} name for reference
  * @param {string} src for file
  * @returns {void}
  */
 function getImg(name, src) {
+    var player = inputs.player.value;
+
     if (Object.prototype.hasOwnProperty.call(img, name)) {
         return img[name].load ? img[name].object : false;
+    }
+
+    if (name === "shadow" && inputs.player.value === "ghost") {
+        return false;
     }
 
     img[name] = {
         load: false,
         object: new Image()
     };
-    img[name].object.src = src ? src : "./img/player/" + name + ".png";
+    if (src) {
+        img[name].object.src = src;
+    } else {
+        img[name].object.src = "./img/player/" + player + "/" + name + ".png";
+    }
     img[name].object.onload = function () {
-        img[name].load = true;
-        render(); // eslint-disable-line
+        if (Object.prototype.hasOwnProperty.call(img, name)) {
+            img[name].load = true;
+            render(); // eslint-disable-line
+        }
     };
     img[name].object.onerror = function () {
-        delete img[name];
-        getImg("custom", "./img/error.jpg");
+        if (Object.prototype.hasOwnProperty.call(img, name)) {
+            delete img[name];
+            getImg("custom", "./img/background/error.jpg");
+        }
     };
 }
 
@@ -99,7 +119,7 @@ function render() {
 
         // opacity images
         context.globalAlpha = 0.2;
-        if (inputs.shadow.value === "yes") {
+        if (inputs.shadow.value === "yes" && inputs.player.value !== "ghost") {
             drawImage("shadow");
         }
         drawImage("overlay");
@@ -107,8 +127,26 @@ function render() {
 
         drawImage("border");
         Object.keys(cosmetic).forEach(function (category) {
-            if (cosmetic[category]) drawImage(category);
+            if (category === "skin" && inputs.player.value === "ghost") return;
+
+            if (cosmetic[category]) {
+                if (category === "pet" && inputs.pet_shadow.value === "yes") {
+                    context.globalAlpha = 0.2;
+                    getImg("pet-shadow", "./img/pet-shadow.png");
+                    drawImage("pet-shadow");
+                    context.globalAlpha = 1;
+                }
+
+                drawImage(category);
+            }
         });
+
+        if (inputs.text.value.length > 0) {
+            context.textAlign = "center";
+            context.font = 'bold 80px "Space Mono", monospace';
+            context.fillStyle = inputs.text_color.value;
+            context.fillText(inputs.text.value, canvas.width / 2, text_offset);
+        }
 
         context.globalCompositeOperation = "destination-over";
         if (background.substr(0, 1) === "#") {
@@ -149,6 +187,8 @@ function updateColor(input1, input2) {
  * @returns {void}
  */
 function updateCosmetic(category) {
+    var is_text = inputs.misc.value === "text";
+
     cosmetic[category] = inputs[category].value;
 
     switch (category) {
@@ -172,6 +212,15 @@ function updateCosmetic(category) {
                         '"]'
                 )
             );
+            break;
+
+        case "misc":
+            inputs.text.parentElement.classList.toggle("d-none", !is_text);
+            if (is_text) {
+                cosmetic.misc = false;
+            } else {
+                inputs.text.value = "";
+            }
             break;
     }
 
@@ -277,6 +326,25 @@ function updateSlider(current) {
     render();
 }
 
+/**
+ * @returns {void}
+ */
+function updatePlayer() {
+    var is_ghost = inputs.player.value === "ghost";
+
+    inputs.skin.parentElement.classList.toggle("d-none", is_ghost);
+    inputs.skin.parentElement.previousElementSibling.classList.toggle(
+        "d-none",
+        is_ghost
+    );
+    inputs.shadow.classList.toggle("d-none", is_ghost);
+
+    delete img.base;
+    delete img.overlay;
+    delete img.border;
+    render();
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     color_two = document.getElementById("color-two");
     linear1 = document.getElementById("linear1");
@@ -284,11 +352,16 @@ document.addEventListener("DOMContentLoaded", function () {
     radial1 = document.getElementById("radial1");
     radial2 = document.getElementById("radial2");
 
+    inputs.misc = document.getElementById("misc");
+    inputs.player = document.getElementById("player");
     inputs.style = document.getElementById("style");
     inputs.pet = document.getElementById("pet");
+    inputs.text = document.getElementById("custom-text");
+    inputs.text_color = document.getElementById("custom-text-color");
     inputs.shadow = document.getElementById("shadow");
     inputs.color = document.getElementById("color");
     inputs.color2 = document.getElementById("color2");
+    inputs.pet_shadow = document.getElementById("pet-shadow");
     inputs.color_custom = document.getElementById("color-custom");
     inputs.color_custom2 = document.getElementById("color-custom2");
     inputs.hat = document.getElementById("hat");
@@ -314,9 +387,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     updateStyle();
     updateBackground();
+    updatePlayer();
     updateCosmetic("skin");
     updateCosmetic("hat");
     updateCosmetic("pet");
+    updateCosmetic("misc");
     updateColor(inputs.color, inputs.color_custom);
     updateColor(inputs.color2, inputs.color_custom2);
 });
