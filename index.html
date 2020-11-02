@@ -29,8 +29,8 @@
                             onchange="updateBackground()"
                         >
                             <optgroup label="Colours">
-                                <option value="#ffffff">White</option>
                                 <option value="#ffffff00">Transparent</option>
+                                <option value="#ffffff">White</option>
                                 <option value="#000000">Black</option>
                                 <option value="custom-color">Custom</option>
                             </optgroup>
@@ -77,6 +77,7 @@
                             name="background-custom-image"
                             id="background-custom-image"
                             onchange="updateBackground()"
+                            placeholder="http://"
                         />
                         <input
                             type="color"
@@ -205,40 +206,22 @@
                                     <option value="./img/hat/banana.png">
                                         Banana
                                     </option>
-                                    <option value="./img/hat/cherry.png">
-                                        Cherry
-                                    </option>
                                     <option value="./img/hat/cheese.png">
                                         Cheese
+                                    </option>
+                                    <option value="./img/hat/cherry.png">
+                                        Cherry
                                     </option>
                                     <option value="./img/hat/egg.png">
                                         Egg
                                     </option>
                                 </optgroup>
                                 <optgroup label="Hats">
-                                    <option value="./img/hat/alien.png">
-                                        Brainslug
-                                    </option>
                                     <option value="./img/hat/anthena.png">
                                         Antenna
                                     </option>
-                                    <option value="./img/hat/cowboy.png">
-                                        Safari
-                                    </option>
-                                    <option value="./img/hat/safari.png">
-                                        Straw
-                                    </option>
-                                    <option value="./img/hat/paperhat.png">
-                                        Paper
-                                    </option>
-                                    <option value="./img/hat/party.png">
-                                        Party
-                                    </option>
-                                    <option value="./img/hat/helmet.png">
-                                        Knight Helmet
-                                    </option>
-                                    <option value="./img/hat/link.png">
-                                        Elf Cap
+                                    <option value="./img/hat/cap.png">
+                                        Backwards Cap
                                     </option>
                                     <option value="./img/hat/bandana.png">
                                         Bandana
@@ -249,11 +232,29 @@
                                     <option value="./img/hat/birthday.png">
                                         Birthday
                                     </option>
-                                    <option value="./img/hat/cap.png">
-                                        Backwards Cap
+                                    <option value="./img/hat/alien.png">
+                                        Brainslug
                                     </option>
                                     <option value="./img/hat/crown.png">
                                         Crown
+                                    </option>
+                                    <option value="./img/hat/link.png">
+                                        Elf Cap
+                                    </option>
+                                    <option value="./img/hat/helmet.png">
+                                        Knight Helmet
+                                    </option>
+                                    <option value="./img/hat/paperhat.png">
+                                        Paper
+                                    </option>
+                                    <option value="./img/hat/party.png">
+                                        Party
+                                    </option>
+                                    <option value="./img/hat/cowboy.png">
+                                        Safari
+                                    </option>
+                                    <option value="./img/hat/safari.png">
+                                        Straw
                                     </option>
                                     <option value="./img/hat/sunglasses.png">
                                         MIRA Security
@@ -336,7 +337,7 @@
                                         Headband
                                     </option>
                                     <option value="./img/hat/headphones.png">
-                                        Headphones
+                                        MIRA Landing Headset
                                     </option>
                                     <option value="./img/hat/mask.png" selected>
                                         Medical Mask
@@ -551,7 +552,10 @@
                                     <option value="./img/skin/captain.png">
                                         Captain
                                     </option>
-                                    <option value="./img/skin/doctor.png">
+                                    <option
+                                        value="./img/skin/doctor.png"
+                                        selected
+                                    >
                                         Doctor
                                     </option>
                                     <option value="./img/skin/explorer.png">
@@ -729,8 +733,8 @@
                             class="form-control"
                             onchange="updateStyle()"
                         >
-                            <option value="Normal" selected>Normal</option>
-                            <option value="Linear">Linear</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Linear" selected>Linear</option>
                             <option value="Radial">Radial</option>
                         </select>
                     </div>
@@ -744,8 +748,8 @@
                             onchange="updateColor(inputs.color, inputs.color_custom)"
                         >
                             <optgroup label="Colours">
-                                <option value="#ffffff">White</option>
                                 <option value="#ffffff00">Transparent</option>
+                                <option value="#ffffff">White</option>
                                 <option value="#000000">Black</option>
                                 <option value="custom">Custom</option>
                             </optgroup>
@@ -783,7 +787,7 @@
                                     id="start-x-val"
                                     class="form-control mr-2 col-4"
                                     min="0"
-                                    value="300"
+                                    value="80"
                                     max="600"
                                     oninput="updateSlider(this)"
                                 />
@@ -792,7 +796,7 @@
                                     name="start-x"
                                     id="start-x"
                                     min="0"
-                                    value="300"
+                                    value="80"
                                     max="600"
                                     class="form-control ml-2"
                                     oninput="updateInput(this)"
@@ -806,7 +810,7 @@
                                     id="start-y-val"
                                     class="form-control mr-2 col-4"
                                     min="0"
-                                    value="0"
+                                    value="290"
                                     max="600"
                                     oninput="updateSlider(this)"
                                 />
@@ -815,7 +819,7 @@
                                     name="start-y"
                                     id="start-y"
                                     min="0"
-                                    value="0"
+                                    value="290"
                                     max="600"
                                     class="form-control ml-2"
                                     oninput="updateInput(this)"
@@ -844,13 +848,13 @@
                             onchange="updateColor(inputs.color2, inputs.color_custom2)"
                         >
                             <optgroup label="Colours">
-                                <option value="#ffffff">White</option>
                                 <option value="#ffffff00">Transparent</option>
+                                <option value="#ffffff">White</option>
                                 <option value="#000000">Black</option>
                                 <option value="custom">Custom</option>
                             </optgroup>
                             <optgroup label="Crewmates">
-                                <option value="#d7deee" selected>White</option>
+                                <option value="#d7deee">White</option>
                                 <option value="#a8b1ba">Grey</option>
                                 <option value="#444e57">Black</option>
                                 <option value="#1d35cf">Blue</option>
@@ -858,7 +862,7 @@
                                 <option value="#3bf8dc">Cyan</option>
                                 <option value="#158130">Green</option>
                                 <option value="#51ec3d">Lime</option>
-                                <option value="#f07e0e">Orange</option>
+                                <option value="#f07e0e" selected>Orange</option>
                                 <option value="#ea59bc">Pink</option>
                                 <option value="#6e33b9">Purple</option>
                                 <option value="#c51615">Red</option>
@@ -882,7 +886,7 @@
                                     id="end-x-val"
                                     class="form-control mr-2 col-4"
                                     min="0"
-                                    value="300"
+                                    value="160"
                                     max="600"
                                     oninput="updateSlider(this)"
                                 />
@@ -891,7 +895,7 @@
                                     name="end-x"
                                     id="end-x"
                                     min="0"
-                                    value="300"
+                                    value="160"
                                     max="600"
                                     class="form-control ml-2"
                                     oninput="updateInput(this)"
@@ -905,7 +909,7 @@
                                     id="end-y-val"
                                     class="form-control mr-2 col-4"
                                     min="0"
-                                    value="600"
+                                    value="500"
                                     max="600"
                                     oninput="updateSlider(this)"
                                 />
@@ -914,7 +918,7 @@
                                     name="end-y"
                                     id="end-y"
                                     min="0"
-                                    value="600"
+                                    value="500"
                                     max="600"
                                     class="form-control ml-2"
                                     oninput="updateInput(this)"
