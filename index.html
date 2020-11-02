@@ -17,9 +17,22 @@
         <script src="./js/script.js"></script>
     </head>
     <body>
-        <div id="container" class="container-fluid pt-5 vh-100">
-            <div class="row h-100">
-                <aside class="col-lg-2">
+        <div id="container" class="container-fluid pt-3 vh-100">
+            <div class="row">
+                <aside class="col-lg-3">
+                    <div class="form-group">
+                        <a
+                            href="#"
+                            class="btn btn-success btn-block"
+                            download="avatar.png"
+                            onclick="save(this)"
+                            >Save<span class="d-none d-xl-inline"
+                                >/Download</span
+                            >
+                            Image</a
+                        >
+                    </div>
+
                     <div class="form-group">
                         <label for="background">Background</label>
                         <select
@@ -86,6 +99,32 @@
                             onchange="updateBackground()"
                             class="form-control d-none mt-2"
                         />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="player">Player</label>
+                        <div class="input-group">
+                            <select
+                                name="player"
+                                id="player"
+                                class="form-control"
+                                onchange="updatePlayer()"
+                            >
+                                <option value="crewmate" selected>
+                                    Crewmate
+                                </option>
+                                <option value="ghost">Ghost</option>
+                            </select>
+                            <select
+                                name="shadow"
+                                id="shadow"
+                                class="form-control"
+                                onchange="render()"
+                            >
+                                <option value="yes">with shadow</option>
+                                <option value="no">without shadow</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -619,112 +658,148 @@
                             </button>
                         </div>
                         <label for="pet" class="mt-2">Pet</label>
-                        <select
-                            name="pet"
-                            id="pet"
-                            class="form-control"
-                            onchange="updateCosmetic('pet')"
-                        >
-                            <option value="" selected>None</option>
-                            <optgroup label="Tiny Crewmates">
-                                <option value="./img/pet/mini.png">
-                                    White
-                                </option>
-                                <option value="./img/pet/mini2.png">
-                                    Black
-                                </option>
-                                <option value="./img/pet/mini3.png">
-                                    Blue
-                                </option>
-                                <option value="./img/pet/mini4.png">
-                                    Brown
-                                </option>
-                                <option value="./img/pet/mini5.png">
-                                    Cyan
-                                </option>
-                                <option value="./img/pet/mini6.png">
-                                    Green
-                                </option>
-                                <option value="./img/pet/mini7.png">
-                                    Lime
-                                </option>
-                                <option value="./img/pet/mini8.png">
-                                    Orange
-                                </option>
-                                <option value="./img/pet/mini9.png">
-                                    Pink
-                                </option>
-                                <option value="./img/pet/mini10.png">
-                                    Purple
-                                </option>
-                                <option value="./img/pet/mini11.png">
-                                    Red
-                                </option>
-                                <option value="./img/pet/mini12.png">
-                                    Yellow
-                                </option>
-                                <option value="./img/pet/robot.png">
-                                    Not WALL-E
-                                </option>
-                            </optgroup>
-                            <optgroup label="Aliens">
-                                <option value="./img/pet/brainslug.png">
-                                    Brainslug
-                                </option>
-                                <option value="./img/pet/ufo.png">UFO</option>
-                                <option value="./img/pet/bedcrab.png">
-                                    Squig
-                                </option>
-                                <option value="./img/pet/bedcrab2.png">
-                                    Not a Headcrab
-                                </option>
-                            </optgroup>
-                            <optgroup label="Real Pets">
-                                <option value="./img/pet/dog.png">Dog</option>
-                                <option value="./img/pet/hamster.png">
-                                    Hamster
-                                </option>
-                            </optgroup>
-                            <optgroup label="Stickmin">
-                                <option value="./img/pet/stickman.png">
-                                    Henry
-                                </option>
-                                <option value="./img/pet/stickwoman.png">
-                                    Ellie
-                                </option>
-                            </optgroup>
-                        </select>
+                        <div class="input-group">
+                            <select
+                                name="pet"
+                                id="pet"
+                                class="form-control"
+                                onchange="updateCosmetic('pet')"
+                            >
+                                <option value="" selected>None</option>
+                                <optgroup label="Tiny Crewmates">
+                                    <option value="./img/pet/mini.png">
+                                        White
+                                    </option>
+                                    <option value="./img/pet/mini2.png">
+                                        Black
+                                    </option>
+                                    <option value="./img/pet/mini3.png">
+                                        Blue
+                                    </option>
+                                    <option value="./img/pet/mini4.png">
+                                        Brown
+                                    </option>
+                                    <option value="./img/pet/mini5.png">
+                                        Cyan
+                                    </option>
+                                    <option value="./img/pet/mini6.png">
+                                        Green
+                                    </option>
+                                    <option value="./img/pet/mini7.png">
+                                        Lime
+                                    </option>
+                                    <option value="./img/pet/mini8.png">
+                                        Orange
+                                    </option>
+                                    <option value="./img/pet/mini9.png">
+                                        Pink
+                                    </option>
+                                    <option value="./img/pet/mini10.png">
+                                        Purple
+                                    </option>
+                                    <option value="./img/pet/mini11.png">
+                                        Red
+                                    </option>
+                                    <option value="./img/pet/mini12.png">
+                                        Yellow
+                                    </option>
+                                    <option value="./img/pet/robot.png">
+                                        Not WALL-E
+                                    </option>
+                                </optgroup>
+                                <optgroup label="Aliens">
+                                    <option value="./img/pet/brainslug.png">
+                                        Brainslug
+                                    </option>
+                                    <option value="./img/pet/ufo.png">
+                                        UFO
+                                    </option>
+                                    <option value="./img/pet/bedcrab.png">
+                                        Squig
+                                    </option>
+                                    <option value="./img/pet/bedcrab2.png">
+                                        Not a Headcrab
+                                    </option>
+                                </optgroup>
+                                <optgroup label="Real Pets">
+                                    <option value="./img/pet/dog.png">
+                                        Dog
+                                    </option>
+                                    <option value="./img/pet/hamster.png">
+                                        Hamster
+                                    </option>
+                                </optgroup>
+                                <optgroup label="Stickmin">
+                                    <option value="./img/pet/stickman.png">
+                                        Henry
+                                    </option>
+                                    <option value="./img/pet/stickwoman.png">
+                                        Ellie
+                                    </option>
+                                </optgroup>
+                            </select>
+                            <select
+                                name="pet-shadow"
+                                id="pet-shadow"
+                                class="form-control"
+                                onchange="render()"
+                            >
+                                <option value="yes">with shadow</option>
+                                <option value="no">without shadow</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="shadow">Shadow</label>
+                        <label for="misc">Misc.</label>
                         <select
-                            name="shadow"
-                            id="shadow"
+                            name="misc"
+                            id="misc"
                             class="form-control"
-                            onchange="render()"
+                            onchange="updateCosmetic('misc')"
                         >
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
+                            <option value="">None</option>
+                            <option value="./img/misc/crewmate.png">
+                                Crewmate
+                            </option>
+                            <option value="./img/misc/impostor.png">
+                                Impostor
+                            </option>
+                            <option value="./img/misc/victory.png">
+                                Victory
+                            </option>
+                            <option value="./img/misc/defeat.png">
+                                Defeat
+                            </option>
+                            <option value="./img/misc/voted.png">
+                                I Voted
+                            </option>
+                            <option value="text">Custom Text</option>
                         </select>
-                    </div>
-
-                    <div class="form-group">
-                        <a
-                            href="#"
-                            class="btn btn-success btn-block"
-                            download="avatar.png"
-                            onclick="save(this)"
-                            >Download</a
-                        >
+                        <div class="input-group d-none mt-2">
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="custom-text"
+                                onkeyup="updateCosmetic('misc')"
+                                placeholder="Custom Text"
+                            />
+                            <input
+                                type="color"
+                                name="custom-text-color"
+                                id="custom-text-color"
+                                class="form-control col-3 ml-2"
+                                onchange="render()"
+                            />
+                        </div>
                     </div>
                 </aside>
                 <main class="col">
-                    <div class="container">
+                    <div class="container mb-3">
                         <canvas id="canvas" class="d-block mx-auto"></canvas>
                     </div>
                 </main>
-                <aside class="col-lg-2">
+                <aside class="col-lg-3">
                     <div class="form-group">
                         <label for="style">Style</label>
                         <select
@@ -741,42 +816,48 @@
 
                     <div class="form-group">
                         <label for="color">Colour</label>
-                        <select
-                            name="color"
-                            id="color"
-                            class="form-control"
-                            onchange="updateColor(inputs.color, inputs.color_custom)"
-                        >
-                            <optgroup label="Colours">
-                                <option value="#ffffff00">Transparent</option>
-                                <option value="#ffffff">White</option>
-                                <option value="#000000">Black</option>
-                                <option value="custom">Custom</option>
-                            </optgroup>
-                            <optgroup label="Crewmates">
-                                <option value="#d7deee" selected>White</option>
-                                <option value="#a8b1ba">Grey</option>
-                                <option value="#444e57">Black</option>
-                                <option value="#1d35cf">Blue</option>
-                                <option value="#734b23">Brown</option>
-                                <option value="#3bf8dc">Cyan</option>
-                                <option value="#158130">Green</option>
-                                <option value="#51ec3d">Lime</option>
-                                <option value="#f07e0e">Orange</option>
-                                <option value="#ea59bc">Pink</option>
-                                <option value="#6e33b9">Purple</option>
-                                <option value="#c51615">Red</option>
-                                <option value="#f2f05f">Yellow</option>
-                            </optgroup>
-                        </select>
-                        <input
-                            type="color"
-                            name="color-custom"
-                            id="color-custom"
-                            value="#c51615"
-                            class="form-control mt-2 d-none"
-                            onchange="render()"
-                        />
+                        <div class="input-group">
+                            <select
+                                name="color"
+                                id="color"
+                                class="form-control"
+                                onchange="updateColor(inputs.color, inputs.color_custom)"
+                            >
+                                <optgroup label="Colours">
+                                    <option value="#ffffff00">
+                                        Transparent
+                                    </option>
+                                    <option value="#ffffff">White</option>
+                                    <option value="#000000">Black</option>
+                                    <option value="custom">Custom</option>
+                                </optgroup>
+                                <optgroup label="Crewmates">
+                                    <option value="#d7deee" selected>
+                                        White
+                                    </option>
+                                    <option value="#a8b1ba">Grey</option>
+                                    <option value="#444e57">Black</option>
+                                    <option value="#1d35cf">Blue</option>
+                                    <option value="#734b23">Brown</option>
+                                    <option value="#3bf8dc">Cyan</option>
+                                    <option value="#158130">Green</option>
+                                    <option value="#51ec3d">Lime</option>
+                                    <option value="#f07e0e">Orange</option>
+                                    <option value="#ea59bc">Pink</option>
+                                    <option value="#6e33b9">Purple</option>
+                                    <option value="#c51615">Red</option>
+                                    <option value="#f2f05f">Yellow</option>
+                                </optgroup>
+                            </select>
+                            <input
+                                type="color"
+                                name="color-custom"
+                                id="color-custom"
+                                value="#c51615"
+                                class="form-control ml-2 col-3 d-none"
+                                onchange="render()"
+                            />
+                        </div>
 
                         <div class="form-group d-none mt-2" id="linear1">
                             <label for="start-x-val">Colour X</label>
@@ -841,42 +922,48 @@
 
                     <div id="color-two" class="form-group d-none">
                         <label for="color2">Colour Two</label>
-                        <select
-                            name="color2"
-                            id="color2"
-                            class="form-control"
-                            onchange="updateColor(inputs.color2, inputs.color_custom2)"
-                        >
-                            <optgroup label="Colours">
-                                <option value="#ffffff00">Transparent</option>
-                                <option value="#ffffff">White</option>
-                                <option value="#000000">Black</option>
-                                <option value="custom">Custom</option>
-                            </optgroup>
-                            <optgroup label="Crewmates">
-                                <option value="#d7deee">White</option>
-                                <option value="#a8b1ba">Grey</option>
-                                <option value="#444e57">Black</option>
-                                <option value="#1d35cf">Blue</option>
-                                <option value="#734b23">Brown</option>
-                                <option value="#3bf8dc">Cyan</option>
-                                <option value="#158130">Green</option>
-                                <option value="#51ec3d">Lime</option>
-                                <option value="#f07e0e" selected>Orange</option>
-                                <option value="#ea59bc">Pink</option>
-                                <option value="#6e33b9">Purple</option>
-                                <option value="#c51615">Red</option>
-                                <option value="#f2f05f">Yellow</option>
-                            </optgroup>
-                        </select>
-                        <input
-                            type="color"
-                            name="color-custom2"
-                            id="color-custom2"
-                            value="#c51615"
-                            class="form-control mt-2 d-none"
-                            oninput="render()"
-                        />
+                        <div class="input-group">
+                            <select
+                                name="color2"
+                                id="color2"
+                                class="form-control"
+                                onchange="updateColor(inputs.color2, inputs.color_custom2)"
+                            >
+                                <optgroup label="Colours">
+                                    <option value="#ffffff00">
+                                        Transparent
+                                    </option>
+                                    <option value="#ffffff">White</option>
+                                    <option value="#000000">Black</option>
+                                    <option value="custom">Custom</option>
+                                </optgroup>
+                                <optgroup label="Crewmates">
+                                    <option value="#d7deee">White</option>
+                                    <option value="#a8b1ba">Grey</option>
+                                    <option value="#444e57">Black</option>
+                                    <option value="#1d35cf">Blue</option>
+                                    <option value="#734b23">Brown</option>
+                                    <option value="#3bf8dc">Cyan</option>
+                                    <option value="#158130">Green</option>
+                                    <option value="#51ec3d">Lime</option>
+                                    <option value="#f07e0e" selected>
+                                        Orange
+                                    </option>
+                                    <option value="#ea59bc">Pink</option>
+                                    <option value="#6e33b9">Purple</option>
+                                    <option value="#c51615">Red</option>
+                                    <option value="#f2f05f">Yellow</option>
+                                </optgroup>
+                            </select>
+                            <input
+                                type="color"
+                                name="color-custom2"
+                                id="color-custom2"
+                                value="#c51615"
+                                class="form-control ml-2 col-3 d-none"
+                                oninput="render()"
+                            />
+                        </div>
                         <div class="form-group d-none mt-2" id="linear2">
                             <label for="end-x-val">Colour 2 X</label>
                             <div class="input-group mb-1">
@@ -923,24 +1010,79 @@
                                     class="form-control ml-2"
                                     oninput="updateInput(this)"
                                 />
-                                <div
-                                    class="form-group mt-2 d-none"
-                                    id="radial2"
-                                >
-                                    <label for="radial2-val"
-                                        >Colour 2 Radius</label
-                                    >
-                                    <input
-                                        type="number"
-                                        name="radial2-val"
-                                        id="radial2-val"
-                                        class="form-control"
-                                        value="180"
-                                        onchange="render()"
-                                    />
-                                </div>
+                            </div>
+                            <div class="form-group mt-2 d-none" id="radial2">
+                                <label for="radial2-val">Colour 2 Radius</label>
+                                <input
+                                    type="number"
+                                    name="radial2-val"
+                                    id="radial2-val"
+                                    class="form-control"
+                                    value="180"
+                                    onchange="render()"
+                                />
                             </div>
                         </div>
+                    </div>
+                </aside>
+            </div>
+            <div class="row pb-3">
+                <aside class="col">
+                    <div class="d-inline-block">
+                        <strong>Not Official:</strong> Website is fan made and
+                        operated, not affiliated with
+                        <a href="http://www.innersloth.com" target="_blank"
+                            >Innersloth</a
+                        ><br />
+                        <strong>Credits:</strong>
+                        <a href="http://www.innersloth.com" target="_blank"
+                            >Innersloth</a
+                        >
+                        (Art),
+                        <a
+                            href="https://steamcommunity.com/id/lsrwLuke"
+                            target="_blank"
+                            >Luke</a
+                        >
+                        (Development & Hosting),
+                        <a
+                            href="https://among-us.fandom.com/wiki/Among_Us_Wiki"
+                            target="_blank"
+                            >Among Us Fandom Wiki</a
+                        >
+                        (Info)<br />
+                        <strong>Contribute:</strong> You can contribute to this
+                        project, raise bugs, or request features on
+                        <a
+                            href="https://github.com/lukesrw/among-us"
+                            target="_blank"
+                            >GitHub</a
+                        >
+                        <hr />
+                        <strong>Disclaimer:</strong>
+                        <a href="http://www.innersloth.com" target="_blank"
+                            >Innersloth</a
+                        >
+                        owns all rights to
+                        <a
+                            href="http://www.innersloth.com/gameAmongUs.php"
+                            target="_blank"
+                            >Among Us</a
+                        >
+                        and any related imagery.<br />
+                        Find out more about Among Us on their website and
+                        purchase it on
+                        <a
+                            href="https://innersloth.itch.io/among-us"
+                            target="_blank"
+                            >Itch.io</a
+                        >
+                        or
+                        <a
+                            href="https://store.steampowered.com/app/945360/Among_Us/"
+                            target="_blank"
+                            >Steam</a
+                        >
                     </div>
                 </aside>
             </div>
