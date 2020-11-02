@@ -8,6 +8,7 @@ body {
     background-image: url("../img/background.png");
     background-size: cover;
     background-position: center center;
+    letter-spacing: 1px;
 }
 
 .btn,
