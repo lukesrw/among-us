@@ -312,6 +312,7 @@ document.addEventListener("DOMContentLoaded", function () {
     getImg("shadow");
     getImg("overlay");
 
+    updateStyle();
     updateBackground();
     updateCosmetic("skin");
     updateCosmetic("hat");
