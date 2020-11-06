@@ -129,6 +129,8 @@ function render() {
         Object.keys(cosmetic).forEach(function (category) {
             if (category === "skin" && inputs.player.value === "ghost") return;
 
+            if (category === "hat" && inputs.player.value === "dead") return;
+
             if (cosmetic[category]) {
                 if (category === "pet" && inputs.pet_shadow.value === "yes") {
                     context.globalAlpha = 0.2;
