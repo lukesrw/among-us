@@ -66,15 +66,21 @@ Object.keys(long_to_short).forEach(function (long) {
  */
 function updateURL() {
     var state = {};
-    Object.keys(inputs).forEach(function (name) {
-        state[long_to_short[name]] = inputs[name].value;
-    });
 
-    window.history.replaceState(
-        "",
-        "",
-        "?" + ARG_AVATAR + "=" + encodeURIComponent(JSON.stringify(state))
-    );
+    if (
+        window.history.replaceState &&
+        typeof window.history.replaceState === "function"
+    ) {
+        Object.keys(inputs).forEach(function (name) {
+            state[long_to_short[name]] = inputs[name].value;
+        });
+
+        window.history.replaceState(
+            "",
+            "",
+            "?" + ARG_AVATAR + "=" + encodeURIComponent(JSON.stringify(state))
+        );
+    }
 }
 
 /**
