@@ -342,6 +342,13 @@ function updateSlider(current) {
  */
 function updatePlayer() {
     var is_ghost = inputs.player.value === "ghost";
+    var is_dead = inputs.player.value === "dead";
+
+    inputs.hat.parentElement.classList.toggle("d-none", is_dead);
+    inputs.hat.parentElement.previousElementSibling.classList.toggle(
+        "d-none",
+        is_dead
+    );
 
     inputs.skin.parentElement.classList.toggle("d-none", is_ghost);
     inputs.skin.parentElement.previousElementSibling.classList.toggle(
