@@ -14,6 +14,15 @@ var color_two;
 var canvas;
 var context;
 var inputs = {};
+var randomize_classes = [
+    "btn-primary",
+    "btn-secondary",
+    "btn-success",
+    "btn-danger",
+    "btn-warning",
+    "btn-info",
+    "btn-dark"
+];
 
 /**
  * controls without UI
@@ -345,6 +354,29 @@ function updatePlayer() {
     delete img.overlay;
     delete img.border;
     render();
+}
+
+/**
+ * @param {DOM} button origin
+ * @returns {void}
+ */
+function randomize(button) {
+    var inputs = button.parentElement.querySelectorAll("select:first-child");
+    var inputs_i = 0;
+    var options;
+
+    button.classList = [
+        "btn",
+        "btn-block",
+        "mt-3",
+        randomize_classes[Math.floor(Math.random() * randomize_classes.length)]
+    ].join(" ");
+
+    for (inputs_i; inputs_i < inputs.length; inputs_i += 1) {
+        options = inputs[inputs_i].querySelectorAll("option");
+        options[Math.floor(Math.random() * options.length)].selected = true;
+        inputs[inputs_i].onchange();
+    }
 }
 
 document.addEventListener("DOMContentLoaded", function () {
