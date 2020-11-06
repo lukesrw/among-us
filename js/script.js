@@ -2,6 +2,9 @@
 
 "use strict";
 
+var ARG_AVATAR = "avatar";
+
+var state_request = {};
 var img = {};
 var background;
 var cosmetic = {};
@@ -14,6 +17,26 @@ var color_two;
 var canvas;
 var context;
 var inputs = {};
+var long_to_short = {
+    background: "b",
+    background_custom_color: "bcc",
+    background_custom_image: "bci",
+    color: "c",
+    color2: "c2",
+    color_custom: "cc",
+    color_custom2: "cc2",
+    hat: "h",
+    misc: "m",
+    pet: "pe",
+    pet_shadow: "ps",
+    player: "p",
+    shadow: "sh",
+    skin: "sk",
+    style: "s",
+    text: "t",
+    text_color: "tc"
+};
+var short_to_long = {};
 var randomize_classes = [
     "btn-primary",
     "btn-secondary",
@@ -28,6 +51,31 @@ var randomize_classes = [
  * controls without UI
  */
 var text_offset = 64;
+
+Object.keys(long_to_short).forEach(function (long) {
+    if (
+        Object.prototype.hasOwnProperty.call(short_to_long, long_to_short[long])
+    ) {
+        throw new Error("Duplicate key: " + long_to_short[long]);
+    }
+    short_to_long[long_to_short[long]] = long;
+});
+
+/**
+ * @returns {void}
+ */
+function updateURL() {
+    var state = {};
+    Object.keys(inputs).forEach(function (name) {
+        state[long_to_short[name]] = inputs[name].value;
+    });
+
+    window.history.replaceState(
+        "",
+        "",
+        "?" + ARG_AVATAR + "=" + encodeURIComponent(JSON.stringify(state))
+    );
+}
 
 /**
  * @param {string} name for reference
@@ -167,6 +215,8 @@ function render() {
             drawImage("custom");
         }
         context.globalCompositeOperation = "source-over";
+
+        updateURL();
     }
 }
 
@@ -393,20 +443,6 @@ document.addEventListener("DOMContentLoaded", function () {
     radial1 = document.getElementById("radial1");
     radial2 = document.getElementById("radial2");
 
-    inputs.misc = document.getElementById("misc");
-    inputs.player = document.getElementById("player");
-    inputs.style = document.getElementById("style");
-    inputs.pet = document.getElementById("pet");
-    inputs.text = document.getElementById("custom-text");
-    inputs.text_color = document.getElementById("custom-text-color");
-    inputs.shadow = document.getElementById("shadow");
-    inputs.color = document.getElementById("color");
-    inputs.color2 = document.getElementById("color2");
-    inputs.pet_shadow = document.getElementById("pet-shadow");
-    inputs.color_custom = document.getElementById("color-custom");
-    inputs.color_custom2 = document.getElementById("color-custom2");
-    inputs.hat = document.getElementById("hat");
-    inputs.skin = document.getElementById("skin");
     inputs.background = document.getElementById("background");
     inputs.background_custom_image = document.getElementById(
         "background-custom-image"
@@ -414,6 +450,20 @@ document.addEventListener("DOMContentLoaded", function () {
     inputs.background_custom_color = document.getElementById(
         "background-custom-color"
     );
+    inputs.color = document.getElementById("color");
+    inputs.color2 = document.getElementById("color2");
+    inputs.color_custom = document.getElementById("color-custom");
+    inputs.color_custom2 = document.getElementById("color-custom2");
+    inputs.hat = document.getElementById("hat");
+    inputs.misc = document.getElementById("misc");
+    inputs.pet = document.getElementById("pet");
+    inputs.pet_shadow = document.getElementById("pet-shadow");
+    inputs.player = document.getElementById("player");
+    inputs.shadow = document.getElementById("shadow");
+    inputs.skin = document.getElementById("skin");
+    inputs.style = document.getElementById("style");
+    inputs.text = document.getElementById("custom-text");
+    inputs.text_color = document.getElementById("custom-text-color");
 
     canvas = document.getElementById("canvas");
     canvas.width = 600;
@@ -425,6 +475,37 @@ document.addEventListener("DOMContentLoaded", function () {
     getImg("border");
     getImg("shadow");
     getImg("overlay");
+
+    window.location.search
+        .substr(1)
+        .split("&")
+        .some(function (part) {
+            if (part.split("=")[0] === ARG_AVATAR) {
+                try {
+                    state_request = JSON.parse(
+                        decodeURIComponent(part.substr(ARG_AVATAR.length + 1))
+                    );
+
+                    Object.keys(state_request).forEach(function (name) {
+                        if (
+                            Object.prototype.hasOwnProperty.call(
+                                inputs,
+                                short_to_long[name]
+                            )
+                        ) {
+                            inputs[short_to_long[name]].value =
+                                state_request[name];
+                        }
+                    });
+                } catch (ignore) {
+                    console.warn(ignore);
+                }
+
+                return true;
+            }
+
+            return false;
+        });
 
     updateStyle();
     updateBackground();
