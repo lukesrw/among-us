@@ -48,6 +48,7 @@
             href="./img/favicon/180.png"
         />
 
+        <link rel="stylesheet" href="./font/vcr_osd_mono.css" />
         <link rel="stylesheet" href="./css/style.css" />
         <script src="./js/script.js"></script>
 
@@ -104,14 +105,14 @@
                                 <option value="#f2f05f">Yellow</option>
                             </optgroup>
                             <optgroup label="Images">
-                                <option
-                                    value="./img/background/game.jpg"
-                                    selected
-                                >
-                                    Title
-                                </option>
                                 <option value="./img/background/space.png">
                                     Space
+                                </option>
+                                <option
+                                    value="./img/background/loading.png"
+                                    selected
+                                >
+                                    Loading
                                 </option>
                                 <option value="./img/background/skeld.jpg">
                                     The Skeld
@@ -121,6 +122,9 @@
                                 </option>
                                 <option value="./img/background/polus.jpg">
                                     Polus
+                                </option>
+                                <option value="./img/background/vote.png">
+                                    Voting
                                 </option>
                                 <option value="custom-image">Custom</option>
                             </optgroup>
@@ -810,6 +814,9 @@
                             onchange="updateCosmetic('misc')"
                         >
                             <option value="">None</option>
+                            <option value="./img/misc/among-us.png" selected>
+                                Among Us
+                            </option>
                             <option value="./img/misc/crewmate.png">
                                 Crewmate
                             </option>
@@ -842,6 +849,14 @@
                                 class="form-control col-3 ml-2"
                                 onchange="render()"
                                 oninput="render()"
+                            />
+                            <input
+                                type="number"
+                                name="custom-text-offset"
+                                id="custom-text-offset"
+                                class="form-control col-2 ml-2"
+                                value="80"
+                                onchange="render()"
                             />
                         </div>
                     </div>
