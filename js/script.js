@@ -22,7 +22,13 @@ var long_to_short = {
     background_custom_color: "bcc",
     background_custom_image: "bci",
     color: "c",
+    radial1_val: "cr",
+    start_x_val: "cx",
+    start_y_val: "cy",
     color2: "c2",
+    end_x_val: "c2x",
+    end_y_val: "c2y",
+    radial2_val: "c2r",
     color_custom: "cc",
     color_custom2: "cc2",
     hat: "h",
@@ -34,9 +40,23 @@ var long_to_short = {
     shadow: "sh",
     skin: "sk",
     style: "s",
-    text: "t",
-    text_color: "tc",
-    text_offset: "to"
+    custom_text: "t",
+    custom_text_color: "tc",
+    custom_text_offset: "to"
+};
+var coords = {
+    normal: {
+        x1: 170,
+        x2: 392,
+        y1: 206,
+        y2: 525
+    },
+    ghost: {
+        x1: 115,
+        x2: 389,
+        y1: 202,
+        y2: 550
+    }
 };
 var short_to_long = {};
 var randomize_classes = [
@@ -229,14 +249,17 @@ function render() {
 }
 
 function fillText(location) {
-    if (inputs.text.value.length > 0 && inputs.misc_index.value === location) {
+    if (
+        inputs.custom_text.value.length > 0 &&
+        inputs.misc_index.value === location
+    ) {
         context.textAlign = "center";
         context.font = '91px "vcr_osd_monoregular", monospace';
-        context.fillStyle = inputs.text_color.value;
+        context.fillStyle = inputs.custom_text_color.value;
         context.fillText(
-            inputs.text.value,
+            inputs.custom_text.value,
             canvas.width / 2,
-            inputs.text_offset.value
+            inputs.custom_text_offset.value
         );
     }
 }
@@ -297,11 +320,14 @@ function updateCosmetic(category) {
             break;
 
         case "misc":
-            inputs.text.parentElement.classList.toggle("d-none", !is_text);
+            inputs.custom_text.parentElement.classList.toggle(
+                "d-none",
+                !is_text
+            );
             if (is_text) {
                 cosmetic.misc = false;
             } else {
-                inputs.text.value = "";
+                inputs.custom_text.value = "";
             }
             break;
     }
@@ -414,6 +440,19 @@ function updateSlider(current) {
 function updatePlayer() {
     var is_ghost = inputs.player.value === "ghost";
     var is_dead = inputs.player.value === "dead";
+    var state = is_ghost ? "ghost" : "normal";
+    var title = {
+        x: "Player Left: " + coords[state].x1 + ", Right: " + coords[state].x2,
+        y: "Player Top: " + coords[state].y1 + ", Bottom: " + coords[state].y2
+    };
+    inputs.start_x_val.parentElement.previousElementSibling.children[0].title =
+        title.x;
+    inputs.end_x_val.parentElement.previousElementSibling.children[0].title =
+        title.x;
+    inputs.start_y_val.parentElement.previousElementSibling.children[0].title =
+        title.y;
+    inputs.end_y_val.parentElement.previousElementSibling.children[0].title =
+        title.y;
 
     inputs.hat.parentElement.classList.toggle("d-none", is_dead);
     inputs.hat.parentElement.previousElementSibling.classList.toggle(
@@ -458,35 +497,30 @@ function randomize(button) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+    var inputs_r_i = 0;
+    var inputs_r = document.querySelectorAll(
+        "select,input:not([type='range'])"
+    );
+
+    for (inputs_r_i; inputs_r_i < inputs_r.length; inputs_r_i += 1) {
+        inputs[inputs_r[inputs_r_i].id.replace(/-/g, "_")] =
+            inputs_r[inputs_r_i];
+    }
+
     color_two = document.getElementById("color-two");
     linear1 = document.getElementById("linear1");
     linear2 = document.getElementById("linear2");
     radial1 = document.getElementById("radial1");
     radial2 = document.getElementById("radial2");
 
-    inputs.background = document.getElementById("background");
-    inputs.background_custom_image = document.getElementById(
-        "background-custom-image"
-    );
-    inputs.background_custom_color = document.getElementById(
-        "background-custom-color"
-    );
-    inputs.color = document.getElementById("color");
-    inputs.color2 = document.getElementById("color2");
-    inputs.color_custom = document.getElementById("color-custom");
-    inputs.color_custom2 = document.getElementById("color-custom2");
-    inputs.hat = document.getElementById("hat");
-    inputs.misc = document.getElementById("misc");
-    inputs.misc_index = document.getElementById("misc-index");
-    inputs.pet = document.getElementById("pet");
-    inputs.pet_shadow = document.getElementById("pet-shadow");
-    inputs.player = document.getElementById("player");
-    inputs.shadow = document.getElementById("shadow");
-    inputs.skin = document.getElementById("skin");
-    inputs.style = document.getElementById("style");
-    inputs.text = document.getElementById("custom-text");
-    inputs.text_color = document.getElementById("custom-text-color");
-    inputs.text_offset = document.getElementById("custom-text-offset");
+    Object.keys(inputs).forEach(function (name) {
+        if (inputs[name] === null) {
+            throw new Error("Missing target for: " + name);
+        }
+        if (!Object.prototype.hasOwnProperty.call(long_to_short, name)) {
+            throw new Error("Missing short definition: " + name);
+        }
+    });
 
     canvas = document.getElementById("canvas");
     canvas.width = 600;
@@ -520,9 +554,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 state_request[name];
                         }
                     });
-                } catch (ignore) {
-                    console.warn(ignore);
-                }
+                } catch (ignore) {}
 
                 return true;
             }
