@@ -27,6 +27,7 @@ var long_to_short = {
     color_custom2: "cc2",
     hat: "h",
     misc: "m",
+    misc_index: "mi",
     pet: "pe",
     pet_shadow: "ps",
     player: "p",
@@ -34,7 +35,8 @@ var long_to_short = {
     skin: "sk",
     style: "s",
     text: "t",
-    text_color: "tc"
+    text_color: "tc",
+    text_offset: "to"
 };
 var short_to_long = {};
 var randomize_classes = [
@@ -185,9 +187,13 @@ function render() {
 
         drawImage("border");
         Object.keys(cosmetic).forEach(function (category) {
-            if (category === "skin" && inputs.player.value === "ghost") return;
-
-            if (category === "hat" && inputs.player.value === "dead") return;
+            if (
+                (category === "skin" && inputs.player.value === "ghost") ||
+                (category === "hat" && inputs.player.value === "dead") ||
+                (category === "misc" && inputs.misc_index.value === "behind")
+            ) {
+                return;
+            }
 
             if (cosmetic[category]) {
                 if (category === "pet" && inputs.pet_shadow.value === "yes") {
@@ -201,18 +207,15 @@ function render() {
             }
         });
 
-        if (inputs.text.value.length > 0) {
-            context.textAlign = "center";
-            context.font = '91px "vcr_osd_monoregular", monospace';
-            context.fillStyle = inputs.text_color.value;
-            context.fillText(
-                inputs.text.value,
-                canvas.width / 2,
-                inputs.text_offset.value
-            );
-        }
+        fillText("front");
 
         context.globalCompositeOperation = "destination-over";
+
+        if (inputs.misc_index.value === "behind" && cosmetic.misc) {
+            drawImage("misc");
+        }
+        fillText("behind");
+
         if (background.substr(0, 1) === "#") {
             context.fillStyle = background;
             context.fillRect(0, 0, canvas.width, canvas.height);
@@ -222,6 +225,19 @@ function render() {
         context.globalCompositeOperation = "source-over";
 
         updateURL();
+    }
+}
+
+function fillText(location) {
+    if (inputs.text.value.length > 0 && inputs.misc_index.value === location) {
+        context.textAlign = "center";
+        context.font = '91px "vcr_osd_monoregular", monospace';
+        context.fillStyle = inputs.text_color.value;
+        context.fillText(
+            inputs.text.value,
+            canvas.width / 2,
+            inputs.text_offset.value
+        );
     }
 }
 
@@ -461,6 +477,7 @@ document.addEventListener("DOMContentLoaded", function () {
     inputs.color_custom2 = document.getElementById("color-custom2");
     inputs.hat = document.getElementById("hat");
     inputs.misc = document.getElementById("misc");
+    inputs.misc_index = document.getElementById("misc-index");
     inputs.pet = document.getElementById("pet");
     inputs.pet_shadow = document.getElementById("pet-shadow");
     inputs.player = document.getElementById("player");

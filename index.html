@@ -807,33 +807,49 @@
 
                     <div class="form-group">
                         <label for="misc">Misc.</label>
-                        <select
-                            name="misc"
-                            id="misc"
-                            class="form-control"
-                            onchange="updateCosmetic('misc')"
-                        >
-                            <option value="">None</option>
-                            <option value="./img/misc/among-us.png" selected>
-                                Among Us
-                            </option>
-                            <option value="./img/misc/crewmate.png">
-                                Crewmate
-                            </option>
-                            <option value="./img/misc/impostor.png">
-                                Impostor
-                            </option>
-                            <option value="./img/misc/victory.png">
-                                Victory
-                            </option>
-                            <option value="./img/misc/defeat.png">
-                                Defeat
-                            </option>
-                            <option value="./img/misc/voted.png">
-                                I Voted
-                            </option>
-                            <option value="text">Custom Text</option>
-                        </select>
+                        <div class="input-group">
+                            <select
+                                name="misc"
+                                id="misc"
+                                class="form-control"
+                                onchange="updateCosmetic('misc')"
+                            >
+                                <option value="">None</option>
+                                <option
+                                    value="./img/misc/among-us.png"
+                                    selected
+                                >
+                                    Among Us
+                                </option>
+                                <option value="./img/misc/crewmate.png">
+                                    Crewmate
+                                </option>
+                                <option value="./img/misc/impostor.png">
+                                    Impostor
+                                </option>
+                                <option value="./img/misc/victory.png">
+                                    Victory
+                                </option>
+                                <option value="./img/misc/defeat.png">
+                                    Defeat
+                                </option>
+                                <option value="./img/misc/voted.png">
+                                    I Voted
+                                </option>
+                                <option value="text">Custom Text</option>
+                            </select>
+                            <select
+                                name="misc-index"
+                                id="misc-index"
+                                class="form-control"
+                                onchange="render()"
+                            >
+                                <option value="behind">behind avatar</option>
+                                <option value="front">
+                                    in front of avatar
+                                </option>
+                            </select>
+                        </div>
                         <div class="input-group d-none mt-2">
                             <input
                                 type="text"
