@@ -47,11 +47,6 @@ var randomize_classes = [
     "btn-dark"
 ];
 
-/**
- * controls without UI
- */
-var text_offset = 64;
-
 Object.keys(long_to_short).forEach(function (long) {
     if (
         Object.prototype.hasOwnProperty.call(short_to_long, long_to_short[long])
@@ -208,9 +203,13 @@ function render() {
 
         if (inputs.text.value.length > 0) {
             context.textAlign = "center";
-            context.font = 'bold 80px "Space Mono", monospace';
+            context.font = '91px "vcr_osd_monoregular", monospace';
             context.fillStyle = inputs.text_color.value;
-            context.fillText(inputs.text.value, canvas.width / 2, text_offset);
+            context.fillText(
+                inputs.text.value,
+                canvas.width / 2,
+                inputs.text_offset.value
+            );
         }
 
         context.globalCompositeOperation = "destination-over";
@@ -470,6 +469,7 @@ document.addEventListener("DOMContentLoaded", function () {
     inputs.style = document.getElementById("style");
     inputs.text = document.getElementById("custom-text");
     inputs.text_color = document.getElementById("custom-text-color");
+    inputs.text_offset = document.getElementById("custom-text-offset");
 
     canvas = document.getElementById("canvas");
     canvas.width = 600;
