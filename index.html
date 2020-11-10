@@ -6,12 +6,16 @@
 
         <title>Among Us - Custom Avatar</title>
 
+        <!-- todo: update to local files -->
         <link
             rel="stylesheet"
             href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
             integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
             crossorigin="anonymous"
         />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
         <link
             rel="icon"
@@ -73,6 +77,20 @@
                             >
                             Image</a
                         >
+                        <div id="random" class="btn-group w-100 mt-2 d-none">
+                            <button
+                                class="btn btn-info mr-1"
+                                onclick="randomize(this, document.querySelectorAll('.randomize'))"
+                            >
+                                Randomize
+                            </button>
+                            <button
+                                class="btn btn-info ml-1"
+                                onclick="randomize(this, document.querySelectorAll('select, input'))"
+                            >
+                                Super Randomize
+                            </button>
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -149,7 +167,7 @@
 
                     <div class="form-group">
                         <label for="player">Player</label>
-                        <div class="input-group">
+                        <div class="input-group mb-2">
                             <select
                                 name="player"
                                 id="player"
@@ -172,6 +190,19 @@
                                 <option value="no">without shadow</option>
                             </select>
                         </div>
+
+                        <label for="facing">Facing</label>
+                        <div class="input-group">
+                            <select
+                                name="facing"
+                                id="facing"
+                                class="form-control"
+                                onchange="render()"
+                            >
+                                <option value="left">Left</option>
+                                <option value="right" selected>Right</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -180,7 +211,7 @@
                             <select
                                 name="hat"
                                 id="hat"
-                                class="form-control"
+                                class="form-control randomize randomize-hsp"
                                 onchange="updateCosmetic('hat')"
                             >
                                 <option value="">None</option>
@@ -594,7 +625,7 @@
                             <select
                                 name="skin"
                                 id="skin"
-                                class="form-control"
+                                class="form-control randomize randomize-hsp"
                                 onchange="updateCosmetic('skin')"
                             >
                                 <option value="">None</option>
@@ -711,7 +742,7 @@
                             <select
                                 name="pet"
                                 id="pet"
-                                class="form-control"
+                                class="form-control randomize randomize-hsp"
                                 onchange="updateCosmetic('pet')"
                             >
                                 <option value="" selected>None</option>
@@ -797,12 +828,45 @@
                                 <option value="no">without shadow</option>
                             </select>
                         </div>
-                        <button
-                            class="btn btn-block btn-info mt-3"
-                            onclick="randomize(this)"
-                        >
-                            Randomize!
-                        </button>
+                        <div class="btn-group mt-3 w-100">
+                            <button
+                                class="btn btn-block btn-info"
+                                onclick="randomize(this, document.querySelectorAll('.randomize-hsp'))"
+                            >
+                                Randomize<span class="d-none d-xl-inline">
+                                    Hat, Skin & Pet</span
+                                >
+                            </button>
+                            <button
+                                type="button"
+                                class="btn btn-info dropdown-toggle dropdown-toggle-split"
+                                data-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                            >
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a
+                                    class="dropdown-item"
+                                    href="javascript:void 0"
+                                    onclick="randomize(this, document.querySelectorAll('#hat'))"
+                                    >Randomize Hat</a
+                                >
+                                <a
+                                    href="javascript:void 0"
+                                    class="dropdown-item"
+                                    onclick="randomize(this, document.querySelectorAll('#skin'))"
+                                    >Randomize Skin</a
+                                >
+                                <a
+                                    href="javascript:void 0"
+                                    class="dropdown-item"
+                                    onclick="randomize(this, document.querySelectorAll('#pet'))"
+                                    >Randomize Pet</a
+                                >
+                            </div>
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -836,6 +900,23 @@
                                 <option value="./img/misc/voted.png">
                                     I Voted
                                 </option>
+                                <!-- <optgroup label="Actions">
+                                    <option value="./img/misc/use.png">
+                                        Use
+                                    </option>
+                                    <option value="./img/misc/report.png">
+                                        Report
+                                    </option>
+                                    <option value="./img/misc/kill.png">
+                                        Kill
+                                    </option>
+                                    <option value="./img/misc/sabotage.png">
+                                        Sabotage
+                                    </option>
+                                    <option value="./img/misc/vent.png">
+                                        Vent
+                                    </option>
+                                </optgroup> -->
                                 <option value="text">Custom Text</option>
                             </select>
                             <select
@@ -886,13 +967,52 @@
                         <select
                             name="style"
                             id="style"
-                            class="form-control"
+                            class="form-control randomize randomize-sc"
                             onchange="updateStyle()"
                         >
                             <option value="Normal">Normal</option>
                             <option value="Linear" selected>Linear</option>
                             <option value="Radial">Radial</option>
                         </select>
+                        <div class="btn-group mt-2 w-100">
+                            <button
+                                class="btn btn-info btn-block"
+                                onclick="randomize(this, document.querySelectorAll('.randomize-sc:not(#style), .randomize-xyr'))"
+                            >
+                                Randomize<span class="d-none d-xl-inline">
+                                    Colours & Positions</span
+                                >
+                            </button>
+                            <button
+                                type="button"
+                                class="btn btn-info dropdown-toggle dropdown-toggle-split"
+                                data-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                            >
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a
+                                    href="javascript:void 0"
+                                    class="dropdown-item"
+                                    onclick="randomize(this, document.querySelectorAll('#style'))"
+                                    >Randomize Style</a
+                                >
+                                <a
+                                    href="javascript:void 0"
+                                    class="dropdown-item"
+                                    onclick="randomize(this, document.querySelectorAll('.randomize-sc:not(#style)'))"
+                                    >Randomize Colours</a
+                                >
+                                <a
+                                    href="javascript:void 0"
+                                    class="dropdown-item"
+                                    onclick="randomize(this, document.querySelectorAll('.randomize-xyr'))"
+                                    >Randomize Positions</a
+                                >
+                            </div>
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -901,7 +1021,7 @@
                             <select
                                 name="color"
                                 id="color"
-                                class="form-control"
+                                class="form-control randomize randomize-sc"
                                 onchange="updateColor(inputs.color, inputs.color_custom)"
                             >
                                 <optgroup label="Colours">
@@ -935,7 +1055,7 @@
                                 name="color-custom"
                                 id="color-custom"
                                 value="#c51615"
-                                class="form-control ml-2 col-3 d-none"
+                                class="form-control ml-2 col-3 d-none randomize randomize-sc"
                                 onchange="render()"
                                 oninput="render()"
                             />
@@ -950,11 +1070,12 @@
                                     type="number"
                                     name="start-x-val"
                                     id="start-x-val"
-                                    class="form-control mr-2 col-4"
+                                    class="form-control mr-2 col-4 randomize-xyr"
                                     min="0"
                                     value="80"
                                     max="600"
                                     oninput="updateSlider(this)"
+                                    onchange="updateSlider(this)"
                                 />
                                 <input
                                     type="range"
@@ -975,11 +1096,12 @@
                                     type="number"
                                     name="start-y-val"
                                     id="start-y-val"
-                                    class="form-control mr-2 col-4"
+                                    class="form-control mr-2 col-4 randomize-xyr"
                                     min="0"
                                     value="290"
                                     max="600"
                                     oninput="updateSlider(this)"
+                                    onchange="updateSlider(this)"
                                 />
                                 <input
                                     type="range"
@@ -998,8 +1120,10 @@
                                     type="number"
                                     name="radial1-val"
                                     id="radial1-val"
-                                    class="form-control"
-                                    value="180"
+                                    class="form-control randomize-xyr"
+                                    min="0"
+                                    value="300"
+                                    max="1200"
                                     onchange="render()"
                                 />
                             </div>
@@ -1012,7 +1136,7 @@
                             <select
                                 name="color2"
                                 id="color2"
-                                class="form-control"
+                                class="form-control randomize randomize-sc"
                                 onchange="updateColor(inputs.color2, inputs.color_custom2)"
                             >
                                 <optgroup label="Colours">
@@ -1046,7 +1170,7 @@
                                 name="color-custom2"
                                 id="color-custom2"
                                 value="#c51615"
-                                class="form-control ml-2 col-3 d-none"
+                                class="form-control ml-2 col-3 d-none randomize randomize-sc"
                                 oninput="render()"
                                 onchange="render()"
                             />
@@ -1060,11 +1184,12 @@
                                     type="number"
                                     name="end-x-val"
                                     id="end-x-val"
-                                    class="form-control mr-2 col-4"
+                                    class="form-control mr-2 col-4 randomize-xyr"
                                     min="0"
                                     value="160"
                                     max="600"
                                     oninput="updateSlider(this)"
+                                    onchange="updateSlider(this)"
                                 />
                                 <input
                                     type="range"
@@ -1085,11 +1210,12 @@
                                     type="number"
                                     name="end-y-val"
                                     id="end-y-val"
-                                    class="form-control mr-2 col-4"
+                                    class="form-control mr-2 col-4 randomize-xyr"
                                     min="0"
                                     value="500"
                                     max="600"
                                     oninput="updateSlider(this)"
+                                    onchange="updateSlider(this)"
                                 />
                                 <input
                                     type="range"
@@ -1110,8 +1236,10 @@
                                     type="number"
                                     name="radial2-val"
                                     id="radial2-val"
-                                    class="form-control"
-                                    value="180"
+                                    class="form-control randomize-xyr"
+                                    min="0"
+                                    value="1200"
+                                    max="1200"
                                     onchange="render()"
                                 />
                             </div>
@@ -1142,7 +1270,14 @@
                                 target="_blank"
                                 >Among Us Fandom Wiki</a
                             >
-                            (Info)<br />
+                            (Info),
+                            <a
+                                id="ziad"
+                                href="https://github.com/z1ad"
+                                target="_blank"
+                                >z1ad</a
+                            >
+                            (Feedback)<br />
                             <strong>Contribute:</strong> You can contribute to
                             this project, raise bugs, or request features on
                             <a
