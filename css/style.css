@@ -35,3 +35,10 @@ canvas,
 #container .form-group .form-group {
     margin-bottom: 0;
 }
+
+#github span {
+    display: block;
+    height: 28px;
+    margin-right: 0.5rem;
+    margin-top: 0.5rem;
+}
