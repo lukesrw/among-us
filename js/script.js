@@ -3,7 +3,10 @@
 "use strict";
 
 var ARG_AVATAR = "avatar";
+var MAX_RGB_VALUE = 16777215;
+var HEX = 16;
 
+var ziad;
 var state_request = {};
 var img = {};
 var background;
@@ -28,6 +31,7 @@ var long_to_short = {
     color2: "c2",
     end_x_val: "c2x",
     end_y_val: "c2y",
+    facing: "f",
     radial2_val: "c2r",
     color_custom: "cc",
     color_custom2: "cc2",
@@ -59,7 +63,7 @@ var coords = {
     }
 };
 var short_to_long = {};
-var randomize_classes = [
+var btn_classes = [
     "btn-primary",
     "btn-secondary",
     "btn-success",
@@ -68,6 +72,10 @@ var randomize_classes = [
     "btn-info",
     "btn-dark"
 ];
+
+function pickRandom(min, max) {
+    return Math.floor(Math.random() * max) + min;
+}
 
 Object.keys(long_to_short).forEach(function (long) {
     if (
@@ -149,6 +157,13 @@ function drawImage(name) {
     }
 }
 
+function flipCanvas() {
+    if (inputs.facing.value === "left") {
+        context.translate(canvas.width, 0);
+        context.scale(-1, 1);
+    }
+}
+
 /**
  * @returns {void}
  */
@@ -166,6 +181,7 @@ function render() {
     ) {
         context.clearRect(0, 0, canvas.width, canvas.height);
 
+        flipCanvas();
         drawImage("base");
 
         context.globalCompositeOperation = "source-in";
@@ -197,15 +213,22 @@ function render() {
 
         context.globalCompositeOperation = "source-over";
 
+        flipCanvas();
+
         // opacity images
         context.globalAlpha = 0.2;
         if (inputs.shadow.value === "yes" && inputs.player.value !== "ghost") {
             drawImage("shadow");
         }
+
+        flipCanvas();
+
         drawImage("overlay");
+
         context.globalAlpha = 1;
 
         drawImage("border");
+
         Object.keys(cosmetic).forEach(function (category) {
             if (
                 (category === "skin" && inputs.player.value === "ghost") ||
@@ -214,6 +237,8 @@ function render() {
             ) {
                 return;
             }
+
+            if (category === "misc") flipCanvas();
 
             if (cosmetic[category]) {
                 if (category === "pet" && inputs.pet_shadow.value === "yes") {
@@ -225,7 +250,11 @@ function render() {
 
                 drawImage(category);
             }
+
+            if (category === "misc") flipCanvas();
         });
+
+        flipCanvas();
 
         fillText("front");
 
@@ -475,24 +504,60 @@ function updatePlayer() {
 
 /**
  * @param {DOM} button origin
+ * @param {DOM} targets to randomize
  * @returns {void}
  */
-function randomize(button) {
-    var inputs = button.parentElement.querySelectorAll("select:first-child");
-    var inputs_i = 0;
+function randomize(button, targets) {
+    var target_i = 0;
     var options;
+    var btn_class = btn_classes[pickRandom(0, btn_classes.length)];
+    var has_block;
 
-    button.classList = [
-        "btn",
-        "btn-block",
-        "mt-3",
-        randomize_classes[Math.floor(Math.random() * randomize_classes.length)]
-    ].join(" ");
+    if (button.tagName === "BUTTON") {
+        has_block = button.classList.contains("btn-block");
+        button.classList = ["btn", btn_class].join(" ");
 
-    for (inputs_i; inputs_i < inputs.length; inputs_i += 1) {
-        options = inputs[inputs_i].querySelectorAll("option");
-        options[Math.floor(Math.random() * options.length)].selected = true;
-        inputs[inputs_i].onchange();
+        if (has_block) button.classList.add("btn-block");
+
+        if (
+            button.nextElementSibling &&
+            button.nextElementSibling.classList.contains("dropdown-toggle")
+        ) {
+            button.nextElementSibling.classList = [
+                "btn",
+                btn_class,
+                "dropdown-toggle",
+                "dropdown-toggle-split"
+            ].join(" ");
+        }
+    }
+
+    for (target_i; target_i < targets.length; target_i += 1) {
+        switch (targets[target_i].tagName) {
+            case "SELECT":
+                options = targets[target_i].querySelectorAll("option");
+                options[pickRandom(0, options.length)].selected = true;
+                break;
+
+            case "INPUT":
+                switch (targets[target_i].type) {
+                    case "number":
+                        targets[target_i].value = pickRandom(
+                            1,
+                            targets[target_i].max
+                        );
+                        break;
+
+                    case "color":
+                        targets[target_i].value =
+                            "#" + pickRandom(0, MAX_RGB_VALUE).toString(HEX);
+                        break;
+                }
+        }
+
+        if (typeof targets[target_i].onchange === "function") {
+            targets[target_i].onchange();
+        }
     }
 }
 
@@ -512,6 +577,12 @@ document.addEventListener("DOMContentLoaded", function () {
     linear2 = document.getElementById("linear2");
     radial1 = document.getElementById("radial1");
     radial2 = document.getElementById("radial2");
+
+    document.getElementById("ziad").addEventListener("click", function () {
+        setTimeout(function () {
+            document.querySelector("#random").classList.remove("d-none");
+        }, 100);
+    });
 
     Object.keys(inputs).forEach(function (name) {
         if (inputs[name] === null) {
