@@ -11,7 +11,7 @@ var directories = {
     hat: "",
     misc: "",
     pet: "",
-    skin: "doctor"
+    skin: "./img/skin/Professions/Doctor.png"
 };
 var ziad;
 var state_request = {};
@@ -634,7 +634,6 @@ function getLoaded(category) {
             var option = document.createElement("option");
             option.value = "";
             option.innerText = "None";
-            option.selected = directories[directory] === "";
             inputs[directory].appendChild(option);
 
             Object.keys(data).forEach(function (key) {
@@ -654,10 +653,11 @@ function getLoaded(category) {
                     option = document.createElement("option");
                     option.value = path + item + ".png";
                     option.innerText = item;
-                    option.selected = directories[directory] === item;
                     target.appendChild(option);
                 });
             });
+
+            inputs[directory].value = directories[directory];
 
             getLoaded(directory);
         };
