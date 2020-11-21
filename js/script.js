@@ -7,9 +7,9 @@ var MAX_RGB_VALUE = 16777215;
 var HEX = 16;
 
 var directories = {
-    background: "",
-    hat: "",
-    misc: "",
+    background: "./img/background/Images/Loading.png",
+    hat: "./img/hat/Not Hats/Medical Mask.png",
+    misc: "./img/misc/Among Us.png",
     pet: "",
     skin: "./img/skin/Professions/Doctor.png"
 };
@@ -632,13 +632,16 @@ function getLoaded(category) {
         request.onload = function () {
             var data = JSON.parse(request.response);
             var option = document.createElement("option");
+            var target;
             option.value = "";
             option.innerText = "None";
-            inputs[directory].appendChild(option);
+            if (directory !== "background") {
+                inputs[directory].appendChild(option);
+            }
 
             Object.keys(data).forEach(function (key) {
-                var target = inputs[directory];
                 var path = "./img/" + directory + "/";
+                target = inputs[directory];
 
                 if (typeof data[key] === "string") {
                     data[key] = [data[key]];
@@ -655,7 +658,21 @@ function getLoaded(category) {
                     option.innerText = item;
                     target.appendChild(option);
                 });
+
+                if (directory === "background" && key === "Images") {
+                    option = document.createElement("option");
+                    option.value = "custom-image";
+                    option.innerText = "Custom Image";
+                    target.appendChild(option);
+                }
             });
+
+            if (directory === "misc") {
+                option = document.createElement("option");
+                option.value = "text";
+                option.innerText = "Custom Text";
+                target.appendChild(option);
+            }
 
             inputs[directory].value = directories[directory];
 
