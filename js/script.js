@@ -622,6 +622,8 @@ function getLoaded(category) {
 
             return true;
         }
+
+        return false;
     }
 
     Object.keys(directories).forEach(function (directory) {
