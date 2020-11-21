@@ -2,7 +2,17 @@ const { promises: fs } = require("fs");
 const { join } = require("path");
 
 function filterSort(files) {
-    return files.filter(file => !file.startsWith("_")).sort();
+    return files
+        .filter(file => !file.startsWith("_"))
+        .sort((item1, item2) => {
+            if (item1.includes(".")) return 1;
+            if (item2.includes(".")) return -1;
+
+            if (item1 > item2) return 1;
+            if (item2 > item1) return -1;
+
+            return 0;
+        });
 }
 
 module.exports = async handle => {
