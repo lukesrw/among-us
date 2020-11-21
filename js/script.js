@@ -9,7 +9,7 @@ var HEX = 16;
 var directories = {
     background: "./img/background/Images/Loading.png",
     hat: "./img/hat/Not Hats/Medical Mask.png",
-    misc: "./img/misc/Among Us.png",
+    misc: "./img/misc/Game/Among Us.png",
     pet: "",
     skin: "./img/skin/Professions/Doctor.png"
 };
@@ -662,7 +662,7 @@ function getLoaded(category) {
                 if (directory === "background" && key === "Images") {
                     option = document.createElement("option");
                     option.value = "custom-image";
-                    option.innerText = "Custom Image";
+                    option.innerText = "Custom";
                     target.appendChild(option);
                 }
             });
@@ -670,7 +670,7 @@ function getLoaded(category) {
             if (directory === "misc") {
                 option = document.createElement("option");
                 option.value = "text";
-                option.innerText = "Custom Text";
+                option.innerText = "Custom";
                 target.appendChild(option);
             }
 
