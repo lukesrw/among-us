@@ -6,6 +6,13 @@ var ARG_AVATAR = "avatar";
 var MAX_RGB_VALUE = 16777215;
 var HEX = 16;
 
+var directories = {
+    background: "",
+    hat: "",
+    misc: "",
+    pet: "",
+    skin: "doctor"
+};
 var ziad;
 var state_request = {};
 var img = {};
@@ -561,6 +568,102 @@ function randomize(button, targets) {
     }
 }
 
+function getLoaded(category) {
+    if (category) {
+        delete directories[category];
+
+        if (Object.keys(directories).length === 0) {
+            window.location.search
+                .substr(1)
+                .split("&")
+                .some(function (part) {
+                    if (part.split("=")[0] === ARG_AVATAR) {
+                        try {
+                            state_request = JSON.parse(
+                                decodeURIComponent(
+                                    part.substr(ARG_AVATAR.length + 1)
+                                )
+                            );
+
+                            Object.keys(state_request).forEach(function (name) {
+                                if (
+                                    Object.prototype.hasOwnProperty.call(
+                                        inputs,
+                                        short_to_long[name]
+                                    )
+                                ) {
+                                    inputs[short_to_long[name]].value =
+                                        state_request[name];
+                                }
+                            });
+                        } catch (ignore) {}
+
+                        return true;
+                    }
+
+                    return false;
+                });
+
+            updateBackground();
+            updateStyle();
+            updatePlayer();
+
+            getImg("base");
+            getImg("border");
+            getImg("shadow");
+            getImg("overlay");
+
+            updateCosmetic("skin");
+            updateCosmetic("hat");
+            updateCosmetic("pet");
+            updateCosmetic("misc");
+            updateColor(inputs.color, inputs.color_custom);
+            updateColor(inputs.color2, inputs.color_custom2);
+
+            return true;
+        }
+    }
+
+    Object.keys(directories).forEach(function (directory) {
+        var request = new XMLHttpRequest();
+        request.open("GET", "./api/?dir=" + directory);
+        request.onload = function () {
+            var data = JSON.parse(request.response);
+            var option = document.createElement("option");
+            option.value = "";
+            option.innerText = "None";
+            option.selected = directories[directory] === "";
+            inputs[directory].appendChild(option);
+
+            Object.keys(data).forEach(function (key) {
+                var target = inputs[directory];
+                var path = "./img/" + directory + "/";
+
+                if (typeof data[key] === "string") {
+                    data[key] = [data[key]];
+                } else {
+                    target = document.createElement("optgroup");
+                    target.label = key;
+                    inputs[directory].appendChild(target);
+                    path += key + "/";
+                }
+
+                data[key].forEach(function (item) {
+                    option = document.createElement("option");
+                    option.value = path + item + ".png";
+                    option.innerText = item;
+                    option.selected = directories[directory] === item;
+                    target.appendChild(option);
+                });
+            });
+
+            getLoaded(directory);
+        };
+
+        return request.send();
+    });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     var inputs_r_i = 0;
     var inputs_r = document.querySelectorAll(
@@ -599,47 +702,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
     context = canvas.getContext("2d");
 
-    getImg("base");
-    getImg("border");
-    getImg("shadow");
-    getImg("overlay");
-
-    window.location.search
-        .substr(1)
-        .split("&")
-        .some(function (part) {
-            if (part.split("=")[0] === ARG_AVATAR) {
-                try {
-                    state_request = JSON.parse(
-                        decodeURIComponent(part.substr(ARG_AVATAR.length + 1))
-                    );
-
-                    Object.keys(state_request).forEach(function (name) {
-                        if (
-                            Object.prototype.hasOwnProperty.call(
-                                inputs,
-                                short_to_long[name]
-                            )
-                        ) {
-                            inputs[short_to_long[name]].value =
-                                state_request[name];
-                        }
-                    });
-                } catch (ignore) {}
-
-                return true;
-            }
-
-            return false;
-        });
-
-    updateStyle();
-    updateBackground();
-    updatePlayer();
-    updateCosmetic("skin");
-    updateCosmetic("hat");
-    updateCosmetic("pet");
-    updateCosmetic("misc");
-    updateColor(inputs.color, inputs.color_custom);
-    updateColor(inputs.color2, inputs.color_custom2);
+    getLoaded();
 });
