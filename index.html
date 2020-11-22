@@ -54,6 +54,7 @@
 
         <link rel="stylesheet" href="./font/vcr_osd_mono.css" />
         <link rel="stylesheet" href="./css/style.css" />
+        <script src="./js/functions/request.js"></script>
         <script src="./js/script.js"></script>
 
         <script
@@ -81,6 +82,21 @@
                             >
                             Image</a
                         >
+                        <div class="input-group mt-2">
+                            <button
+                                id="share-btn"
+                                class="btn btn-success btn-block"
+                                onclick="shareAvatar(this)"
+                            >
+                                Share
+                            </button>
+                            <input
+                                type="text"
+                                name="share"
+                                id="share"
+                                class="d-none ml-2 form-control"
+                            />
+                        </div>
                         <div id="random" class="btn-group w-100 mt-2 d-none">
                             <button
                                 class="btn btn-info"
@@ -471,7 +487,7 @@
                             <label for="start-x-val"
                                 ><abbr>Colour X</abbr></label
                             >
-                            <div class="input-group mb-1">
+                            <div class="input-group mb-2">
                                 <input
                                     type="number"
                                     name="start-x-val"
@@ -585,7 +601,7 @@
                             <label for="end-x-val"
                                 ><abbr>Colour Two X</abbr></label
                             >
-                            <div class="input-group mb-1">
+                            <div class="input-group mb-2">
                                 <input
                                     type="number"
                                     name="end-x-val"
