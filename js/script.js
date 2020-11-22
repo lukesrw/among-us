@@ -1,10 +1,11 @@
-/*global Game ImageElement*/
+/*global request*/
 
 "use strict";
 
 var ARG_AVATAR = "avatar";
 var MAX_RGB_VALUE = 16777215;
 var HEX = 16;
+var ENCODED_BRACE = encodeURIComponent("{");
 
 var directories = {
     background: "./img/background/Images/Loading.png",
@@ -93,25 +94,49 @@ Object.keys(long_to_short).forEach(function (long) {
     short_to_long[long_to_short[long]] = long;
 });
 
+function getState(get_raw) {
+    var state = {};
+
+    if (
+        !get_raw &&
+        getState(true) === state_request &&
+        Object.prototype.hasOwnProperty.call(
+            inputs.share.dataset,
+            "reference"
+        ) &&
+        inputs.share.dataset.reference
+    ) {
+        return inputs.share.dataset.reference;
+    }
+
+    Object.keys(inputs).forEach(function (name) {
+        if (Object.prototype.hasOwnProperty.call(long_to_short, name)) {
+            state[long_to_short[name]] = inputs[name].value;
+        }
+    });
+
+    return encodeURIComponent(JSON.stringify(state));
+}
+
 /**
  * @returns {void}
  */
 function updateURL() {
-    var state = {};
-
     if (
         window.history.replaceState &&
         typeof window.history.replaceState === "function"
     ) {
-        Object.keys(inputs).forEach(function (name) {
-            state[long_to_short[name]] = inputs[name].value;
-        });
-
         window.history.replaceState(
             "",
             "",
-            "?" + ARG_AVATAR + "=" + encodeURIComponent(JSON.stringify(state))
+            "?" + ARG_AVATAR + "=" + getState()
         );
+    }
+
+    if (getState(true) === state_request) {
+        showShare();
+    } else {
+        hideShare();
     }
 }
 
@@ -149,7 +174,7 @@ function getImg(name, src) {
     img[name].object.onerror = function () {
         if (Object.prototype.hasOwnProperty.call(img, name)) {
             delete img[name];
-            getImg("custom", "./img/background/error.jpg");
+            getImg("custom", "./img/background/_error.jpg");
         }
     };
 }
@@ -568,118 +593,228 @@ function randomize(button, targets) {
     }
 }
 
+function showShare() {
+    document.getElementById("share-btn").classList.remove("btn-block");
+    inputs.share.classList.remove("d-none");
+    inputs.share.select();
+}
+
+function hideShare() {
+    document.getElementById("share-btn").classList.add("btn-block");
+    inputs.share.classList.add("d-none");
+}
+
+function shareAvatar(reference) {
+    if (reference) {
+        inputs.share.dataset.reference = reference;
+
+        updateURL();
+        showShare();
+
+        inputs.share.value = window.location.href;
+
+        return reference;
+    }
+
+    state_request = getState();
+
+    request(
+        {
+            method: "POST",
+            data: {
+                avatar: state_request
+            },
+            url: "./api/"
+        },
+        function (error, response) {
+            if (
+                typeof response === "object" &&
+                Object.prototype.hasOwnProperty.call(response, "reference")
+            ) {
+                shareAvatar(response.reference);
+            }
+        }
+    );
+}
+
+function buildState(state) {
+    var request;
+
+    if (state) {
+        state_request = state;
+
+        try {
+            request = JSON.parse(decodeURIComponent(state_request));
+            if (typeof request === "object") {
+                Object.keys(request).forEach(function (name) {
+                    if (
+                        Object.prototype.hasOwnProperty.call(
+                            inputs,
+                            short_to_long[name]
+                        )
+                    ) {
+                        inputs[short_to_long[name]].value = request[name];
+                    }
+                });
+            }
+        } catch (_1) {}
+    }
+
+    updateBackground();
+    updateStyle();
+    updatePlayer();
+
+    getImg("base");
+    getImg("border");
+    getImg("shadow");
+    getImg("overlay");
+
+    updateCosmetic("skin");
+    updateCosmetic("hat");
+    updateCosmetic("pet");
+    updateCosmetic("misc");
+    updateColor(inputs.color, inputs.color_custom);
+    updateColor(inputs.color2, inputs.color_custom2);
+}
+
 function getLoaded(category) {
     if (category) {
         delete directories[category];
 
-        if (Object.keys(directories).length === 0) {
-            window.location.search
+        if (
+            Object.keys(directories).length === 0 &&
+            !window.location.search
                 .substr(1)
                 .split("&")
                 .some(function (part) {
                     if (part.split("=")[0] === ARG_AVATAR) {
-                        try {
-                            state_request = JSON.parse(
-                                decodeURIComponent(
-                                    part.substr(ARG_AVATAR.length + 1)
-                                )
+                        if (
+                            part.substr(
+                                ARG_AVATAR.length + 1,
+                                ENCODED_BRACE.length
+                            ) === ENCODED_BRACE
+                        ) {
+                            return buildState(
+                                part.substr(ARG_AVATAR.length + 1)
                             );
+                        }
 
-                            Object.keys(state_request).forEach(function (name) {
-                                if (
-                                    Object.prototype.hasOwnProperty.call(
-                                        inputs,
-                                        short_to_long[name]
+                        return request(
+                            {
+                                data: {
+                                    avatar: shareAvatar(
+                                        decodeURIComponent(
+                                            part.substr(ARG_AVATAR.length + 1)
+                                        )
                                     )
+                                },
+                                dataType: "json",
+                                method: "GET",
+                                responseType: "json",
+                                url: "./api/"
+                            },
+                            function (error, response) {
+                                if (
+                                    !error &&
+                                    typeof response === "object" &&
+                                    Object.prototype.hasOwnProperty.call(
+                                        response,
+                                        "json"
+                                    ) &&
+                                    response.json
                                 ) {
-                                    inputs[short_to_long[name]].value =
-                                        state_request[name];
+                                    return buildState(response.json);
                                 }
-                            });
-                        } catch (ignore) {}
 
-                        return true;
+                                buildState();
+                            }
+                        );
                     }
 
                     return false;
-                });
-
-            updateBackground();
-            updateStyle();
-            updatePlayer();
-
-            getImg("base");
-            getImg("border");
-            getImg("shadow");
-            getImg("overlay");
-
-            updateCosmetic("skin");
-            updateCosmetic("hat");
-            updateCosmetic("pet");
-            updateCosmetic("misc");
-            updateColor(inputs.color, inputs.color_custom);
-            updateColor(inputs.color2, inputs.color_custom2);
-
-            return true;
+                })
+        ) {
+            buildState();
         }
 
-        return false;
+        return;
     }
 
     Object.keys(directories).forEach(function (directory) {
-        var request = new XMLHttpRequest();
-        request.open("GET", "./api/?dir=" + directory);
-        request.onload = function () {
-            var data = JSON.parse(request.response);
-            var option = document.createElement("option");
-            var target;
-            option.value = "";
-            option.innerText = "None";
-            if (directory !== "background") {
-                inputs[directory].appendChild(option);
-            }
-
-            Object.keys(data).forEach(function (key) {
-                var path = "./img/" + directory + "/";
-                target = inputs[directory];
-
-                if (typeof data[key] === "string") {
-                    data[key] = [data[key]];
-                } else {
-                    target = document.createElement("optgroup");
-                    target.label = key;
-                    inputs[directory].appendChild(target);
-                    path += key + "/";
+        request(
+            {
+                data: {
+                    dir: directory
+                },
+                method: "GET",
+                url: "./img/"
+            },
+            function (error, response) {
+                var element;
+                var target = inputs[directory];
+                if (target.parentElement.classList.contains("input-group")) {
+                    target = target.parentElement;
                 }
 
-                data[key].forEach(function (item) {
-                    option = document.createElement("option");
-                    option.value = path + item + ".png";
-                    option.innerText = item;
-                    target.appendChild(option);
+                if (error) {
+                    element = document.createElement("i");
+                    element.classList.add("text-danger");
+                    element.innerText = " - Error!";
+
+                    target.classList.add("d-none");
+                    target.previousElementSibling.classList.add("d-block");
+                    target.previousElementSibling.appendChild(element);
+
+                    return false;
+                }
+
+                element = document.createElement("option");
+                element.value = "";
+                element.innerText = "None";
+                if (directory !== "background") {
+                    inputs[directory].appendChild(element);
+                }
+
+                Object.keys(response).forEach(function (key) {
+                    var path = "./img/" + directory + "/";
+                    target = inputs[directory];
+
+                    if (typeof response[key] === "string") {
+                        response[key] = [response[key]];
+                    } else {
+                        target = document.createElement("optgroup");
+                        target.label = key;
+                        inputs[directory].appendChild(target);
+                        path += key + "/";
+                    }
+
+                    response[key].forEach(function (item) {
+                        element = document.createElement("option");
+                        element.value = path + item + ".png";
+                        element.innerText = item;
+                        target.appendChild(element);
+                    });
+
+                    if (directory === "background" && key === "Images") {
+                        element = document.createElement("option");
+                        element.value = "custom-image";
+                        element.innerText = "Custom";
+                        target.appendChild(element);
+                    }
                 });
 
-                if (directory === "background" && key === "Images") {
-                    option = document.createElement("option");
-                    option.value = "custom-image";
-                    option.innerText = "Custom";
-                    target.appendChild(option);
+                if (directory === "misc") {
+                    element = document.createElement("option");
+                    element.value = "text";
+                    element.innerText = "Custom";
+                    target.appendChild(element);
                 }
-            });
 
-            if (directory === "misc") {
-                option = document.createElement("option");
-                option.value = "text";
-                option.innerText = "Custom";
-                target.appendChild(option);
+                inputs[directory].value = directories[directory];
+
+                getLoaded(directory);
             }
-
-            inputs[directory].value = directories[directory];
-
-            getLoaded(directory);
-        };
-
-        return request.send();
+        );
     });
 }
 
@@ -707,11 +842,13 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     Object.keys(inputs).forEach(function (name) {
-        if (inputs[name] === null) {
-            throw new Error("Missing target for: " + name);
-        }
-        if (!Object.prototype.hasOwnProperty.call(long_to_short, name)) {
-            throw new Error("Missing short definition: " + name);
+        if (["share"].indexOf(name) === -1) {
+            if (inputs[name] === null) {
+                throw new Error("Missing target for: " + name);
+            }
+            if (!Object.prototype.hasOwnProperty.call(long_to_short, name)) {
+                throw new Error("Missing short definition: " + name);
+            }
         }
     });
 
