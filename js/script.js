@@ -698,7 +698,12 @@ function getLoaded(directory) {
                                         response,
                                         "json"
                                     ) &&
-                                    response.json
+                                    response.json &&
+                                    Object.prototype.hasOwnProperty.call(
+                                        response,
+                                        "error"
+                                    ) &&
+                                    !response.error
                                 ) {
                                     json_to_reference[response.json] = part[1];
 

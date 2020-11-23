@@ -52,12 +52,13 @@ module.exports = handle => {
                             WHERE
                                 avatar_reference = ?`,
                             [handle.data.get.avatar],
-                            (_1, data) => {
+                            (error, data) => {
                                 response.data = Object.assign(
                                     {
+                                        error: Boolean(error),
                                         reference: handle.data.get.avatar
                                     },
-                                    data
+                                    data || {}
                                 );
 
                                 return resolve(response);
