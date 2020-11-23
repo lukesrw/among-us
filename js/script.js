@@ -106,6 +106,18 @@ function getState() {
     return encodeURIComponent(JSON.stringify(json));
 }
 
+function save(button) {
+    var json = getState();
+    if (Object.prototype.hasOwnProperty.call(json_to_reference, json)) {
+        json = " " + json_to_reference[json];
+    } else {
+        json = "";
+    }
+
+    button.download = "avatar" + json + ".png";
+    button.href = canvas.toDataURL("image/png");
+}
+
 /**
  * @param {boolean} from_btn whether user triggered
  * @returns {void}
