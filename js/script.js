@@ -317,16 +317,6 @@ function fillText(location) {
 }
 
 /**
- * @param {DOM} target link
- * @returns {void}
- */
-function save(target) {
-    var data = canvas.toDataURL("image/png");
-
-    target.href = data;
-}
-
-/**
  * @param {DOM} input1 First target color
  * @param {DOM} input2 Second target color
  * @param {boolean} skip_render whether to skip render
