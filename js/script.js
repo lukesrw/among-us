@@ -7,6 +7,7 @@ var MAX_RGB_VALUE = 16777215;
 var HEX = 16;
 var ENCODED_BRACE = encodeURIComponent("{");
 
+var json_to_reference = {};
 var directories = {
     background: "./img/background/Images/Loading.png",
     hat: "./img/hat/Not Hats/Medical Mask.png",
@@ -14,7 +15,6 @@ var directories = {
     pet: "",
     skin: "./img/skin/Professions/Doctor.png"
 };
-var ziad;
 var state_request = {};
 var img = {};
 var background;
@@ -94,28 +94,25 @@ Object.keys(long_to_short).forEach(function (long) {
     short_to_long[long_to_short[long]] = long;
 });
 
-function getState(get_raw) {
-    var state = {};
-
-    if (
-        !get_raw &&
-        getState(true) === state_request &&
-        Object.prototype.hasOwnProperty.call(
-            inputs.share.dataset,
-            "reference"
-        ) &&
-        inputs.share.dataset.reference
-    ) {
-        return inputs.share.dataset.reference;
-    }
+function getState() {
+    var json = {};
 
     Object.keys(inputs).forEach(function (name) {
         if (Object.prototype.hasOwnProperty.call(long_to_short, name)) {
-            state[long_to_short[name]] = inputs[name].value;
+            json[long_to_short[name]] = inputs[name].value;
         }
     });
 
-    return encodeURIComponent(JSON.stringify(state));
+    json = encodeURIComponent(JSON.stringify(json));
+
+    if (Object.prototype.hasOwnProperty.call(json_to_reference, json)) {
+        showShare();
+        return json_to_reference[json];
+    }
+
+    hideShare();
+
+    return json;
 }
 
 /**
@@ -131,12 +128,6 @@ function updateURL() {
             "",
             "?" + ARG_AVATAR + "=" + getState()
         );
-    }
-
-    if (getState(true) === state_request) {
-        showShare();
-    } else {
-        hideShare();
     }
 }
 
@@ -338,21 +329,25 @@ function save(target) {
 /**
  * @param {DOM} input1 First target color
  * @param {DOM} input2 Second target color
+ * @param {boolean} skip_render whether to skip render
  * @returns {void}
  */
-function updateColor(input1, input2) {
+function updateColor(input1, input2, skip_render) {
     if (input1.value !== "custom") {
         input2.value = input1.value;
     }
+
     input2.classList.toggle("d-none", input1.value !== "custom");
-    render();
+
+    if (!skip_render) render();
 }
 
 /**
  * @param {string} category name
+ * @param {boolean} skip_render whether to skip render
  * @returns {void}
  */
-function updateCosmetic(category) {
+function updateCosmetic(category, skip_render) {
     var is_text = inputs.misc.value === "text";
 
     cosmetic[category] = inputs[category].value;
@@ -396,7 +391,7 @@ function updateCosmetic(category) {
     delete img[category];
     if (cosmetic[category]) {
         getImg(category, cosmetic[category]);
-    } else {
+    } else if (!skip_render) {
         render();
     }
 }
@@ -426,9 +421,10 @@ function setHat() {
 }
 
 /**
+ * @param {boolean} skip_render whether to avoid rendering
  * @returns {void}
  */
-function updateBackground() {
+function updateBackground(skip_render) {
     background = inputs.background.value;
 
     inputs.background_custom_image.classList.toggle(
@@ -454,7 +450,7 @@ function updateBackground() {
 
     if (background.substr(0, 1) === "#") {
         inputs.background_custom_color.value = background;
-        render();
+        if (!skip_render) render();
     } else {
         delete img.custom;
         getImg("custom", background);
@@ -462,9 +458,10 @@ function updateBackground() {
 }
 
 /**
+ * @param {boolean} skip_render whether to skip render
  * @returns {void}
  */
-function updateStyle() {
+function updateStyle(skip_render) {
     var is_radial = inputs.style.value === "Radial";
     var is_normal = inputs.style.value === "Normal";
 
@@ -474,7 +471,7 @@ function updateStyle() {
     radial1.classList.toggle("d-none", !is_radial);
     radial2.classList.toggle("d-none", !is_radial);
 
-    render();
+    if (!skip_render) render();
 }
 
 /**
@@ -482,23 +479,20 @@ function updateStyle() {
  * @returns {void}
  */
 function updateInput(current) {
-    current.previousElementSibling.value = current.value;
+    if (current.type === "number") {
+        current.nextElementSibling.value = current.value;
+    } else {
+        current.previousElementSibling.value = current.value;
+    }
+
     render();
 }
 
 /**
- * @param {DOM} current target
+ * @param {boolean} skip_render whether to skip render
  * @returns {void}
  */
-function updateSlider(current) {
-    current.nextElementSibling.value = current.value;
-    render();
-}
-
-/**
- * @returns {void}
- */
-function updatePlayer() {
+function updatePlayer(skip_render) {
     var is_ghost = inputs.player.value === "ghost";
     var is_dead = inputs.player.value === "dead";
     var state = is_ghost ? "ghost" : "normal";
@@ -531,7 +525,8 @@ function updatePlayer() {
     delete img.base;
     delete img.overlay;
     delete img.border;
-    render();
+
+    if (!skip_render) render();
 }
 
 /**
@@ -595,6 +590,7 @@ function randomize(button, targets) {
 
 function showShare() {
     document.getElementById("share-btn").classList.remove("btn-block");
+    inputs.share.value = window.location.href;
     inputs.share.classList.remove("d-none");
     inputs.share.select();
 }
@@ -604,18 +600,7 @@ function hideShare() {
     inputs.share.classList.add("d-none");
 }
 
-function shareAvatar(reference) {
-    if (reference) {
-        inputs.share.dataset.reference = reference;
-
-        updateURL();
-        showShare();
-
-        inputs.share.value = window.location.href;
-
-        return reference;
-    }
-
+function shareAvatar() {
     state_request = getState();
 
     request(
@@ -628,10 +613,12 @@ function shareAvatar(reference) {
         },
         function (error, response) {
             if (
+                !error &&
                 typeof response === "object" &&
                 Object.prototype.hasOwnProperty.call(response, "reference")
             ) {
-                shareAvatar(response.reference);
+                json_to_reference[state_request] = response.reference;
+                getState();
             }
         }
     );
@@ -660,21 +647,23 @@ function buildState(state) {
         } catch (_1) {}
     }
 
-    updateBackground();
-    updateStyle();
-    updatePlayer();
+    updateBackground(true);
+    updateStyle(true);
+    updatePlayer(true);
 
     getImg("base");
     getImg("border");
     getImg("shadow");
     getImg("overlay");
 
-    updateCosmetic("skin");
-    updateCosmetic("hat");
-    updateCosmetic("pet");
-    updateCosmetic("misc");
-    updateColor(inputs.color, inputs.color_custom);
-    updateColor(inputs.color2, inputs.color_custom2);
+    updateCosmetic("skin", true);
+    updateCosmetic("hat", true);
+    updateCosmetic("pet", true);
+    updateCosmetic("misc", true);
+    updateColor(inputs.color, inputs.color_custom, true);
+    updateColor(inputs.color2, inputs.color_custom2, true);
+
+    render();
 }
 
 function getLoaded(category) {
@@ -687,6 +676,7 @@ function getLoaded(category) {
                 .substr(1)
                 .split("&")
                 .some(function (part) {
+                    var reference;
                     if (part.split("=")[0] === ARG_AVATAR) {
                         if (
                             part.substr(
@@ -699,14 +689,14 @@ function getLoaded(category) {
                             );
                         }
 
-                        return request(
+                        reference = decodeURIComponent(
+                            part.substr(ARG_AVATAR.length + 1)
+                        );
+
+                        request(
                             {
                                 data: {
-                                    avatar: shareAvatar(
-                                        decodeURIComponent(
-                                            part.substr(ARG_AVATAR.length + 1)
-                                        )
-                                    )
+                                    avatar: reference
                                 },
                                 dataType: "json",
                                 method: "GET",
@@ -723,12 +713,20 @@ function getLoaded(category) {
                                     ) &&
                                     response.json
                                 ) {
+                                    json_to_reference[
+                                        response.json
+                                    ] = reference;
+
+                                    shareAvatar(reference);
+
                                     return buildState(response.json);
                                 }
 
                                 buildState();
                             }
                         );
+
+                        return true;
                     }
 
                     return false;
@@ -828,6 +826,7 @@ document.addEventListener("DOMContentLoaded", function () {
         inputs[inputs_r[inputs_r_i].id.replace(/-/g, "_")] =
             inputs_r[inputs_r_i];
     }
+    inputs.share.value = "";
 
     color_two = document.getElementById("color-two");
     linear1 = document.getElementById("linear1");
