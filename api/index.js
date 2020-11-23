@@ -66,22 +66,41 @@ module.exports = handle => {
                     }
 
                     if (has_post) {
-                        response.data = {
-                            json: handle.data.post.avatar,
-                            reference: [...Array(HEX)]
-                                .map(() => {
-                                    return Math.floor(
-                                        Math.random() * HEX
-                                    ).toString(HEX);
-                                })
-                                .join("")
-                        };
+                        response.data.json = handle.data.post.avatar;
 
-                        database.run(
-                            `INSERT INTO avatars
-                                (avatar_json, avatar_reference) VALUES
-                                (?, ?)`,
-                            [handle.data.post.avatar, response.data.reference]
+                        return database.get(
+                            `SELECT
+                                avatar_reference reference
+                            FROM
+                                avatars
+                            WHERE
+                                avatar_json = ?`,
+                            [handle.data.post.avatar],
+                            (_1, data) => {
+                                if (data) {
+                                    response.data.reference = data.reference;
+                                } else {
+                                    response.data.reference = [...Array(HEX)]
+                                        .map(() => {
+                                            return Math.floor(
+                                                Math.random() * HEX
+                                            ).toString(HEX);
+                                        })
+                                        .join("");
+
+                                    database.run(
+                                        `INSERT INTO avatars
+                                            (avatar_json, avatar_reference) VALUES
+                                            (?, ?)`,
+                                        [
+                                            handle.data.post.avatar,
+                                            response.data.reference
+                                        ]
+                                    );
+                                }
+
+                                return resolve(response);
+                            }
                         );
                     }
 
