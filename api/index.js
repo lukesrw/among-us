@@ -25,7 +25,13 @@ module.exports = handle => {
 
         try {
             if (has_get || has_post) {
-                let database = new sqlite.Database(join(__dirname, "index.db"));
+                let database = new sqlite.Database(
+                    join(__dirname, "index.db"),
+                    sqlite.OPEN_READWRITE | sqlite.OPEN_CREATE, // eslint-disable-line
+                    error => {
+                        if (error) console.log(error); // eslint-disable-line
+                    }
+                );
 
                 return database.serialize(async () => {
                     database.run(
