@@ -103,22 +103,17 @@ function getState() {
         }
     });
 
-    json = encodeURIComponent(JSON.stringify(json));
-
-    if (Object.prototype.hasOwnProperty.call(json_to_reference, json)) {
-        showShare();
-        return json_to_reference[json];
-    }
-
-    hideShare();
-
-    return json;
+    return encodeURIComponent(JSON.stringify(json));
 }
 
 /**
+ * @param {boolean} from_btn whether user triggered
  * @returns {void}
  */
-function updateURL() {
+function updateURL(from_btn) {
+    var json = getState();
+    var has_ref = Object.prototype.hasOwnProperty.call(json_to_reference, json);
+
     if (
         window.history.replaceState &&
         typeof window.history.replaceState === "function"
@@ -126,9 +121,17 @@ function updateURL() {
         window.history.replaceState(
             "",
             "",
-            "?" + ARG_AVATAR + "=" + getState()
+            "?" + ARG_AVATAR + "=" + (has_ref ? json_to_reference[json] : json)
         );
     }
+
+    /**
+     * show share if we match a reference
+     */
+    inputs.share.value = window.location.href;
+    inputs.share.classList.toggle("d-none", !has_ref);
+    inputs.share.previousElementSibling.classList.toggle("btn-block", !has_ref);
+    if (from_btn && has_ref) inputs.share.select();
 }
 
 /**
@@ -578,26 +581,17 @@ function randomize(button, targets) {
     }
 }
 
-function showShare() {
-    document.getElementById("share-btn").classList.remove("btn-block");
-    inputs.share.value = window.location.href;
-    inputs.share.classList.remove("d-none");
-    inputs.share.select();
-}
-
-function hideShare() {
-    document.getElementById("share-btn").classList.add("btn-block");
-    inputs.share.classList.add("d-none");
-}
-
 function shareAvatar() {
-    state_request = getState();
+    var json = getState();
+    if (Object.prototype.hasOwnProperty.call(json_to_reference, json)) {
+        return updateURL(true);
+    }
 
-    request(
+    return request(
         {
             method: "POST",
             data: {
-                avatar: state_request
+                avatar: json
             },
             url: "./api/"
         },
@@ -607,8 +601,9 @@ function shareAvatar() {
                 typeof response === "object" &&
                 Object.prototype.hasOwnProperty.call(response, "reference")
             ) {
-                json_to_reference[state_request] = response.reference;
-                getState();
+                json_to_reference[json] = response.reference;
+
+                return shareAvatar();
             }
         }
     );
@@ -656,9 +651,13 @@ function buildState(state) {
     render();
 }
 
-function getLoaded(category) {
-    if (category) {
-        delete directories[category];
+function getLoaded(directory) {
+    if (directory) {
+        /**
+         * if we've been given a specific directory,
+         * delete loading record for that directory
+         */
+        delete directories[directory];
 
         if (
             Object.keys(directories).length === 0 &&
@@ -666,27 +665,25 @@ function getLoaded(category) {
                 .substr(1)
                 .split("&")
                 .some(function (part) {
-                    var reference;
-                    if (part.split("=")[0] === ARG_AVATAR) {
+                    part = part.split("=");
+                    if (part[0] === ARG_AVATAR) {
                         if (
-                            part.substr(
-                                ARG_AVATAR.length + 1,
-                                ENCODED_BRACE.length
-                            ) === ENCODED_BRACE
+                            part[1].substr(0, ENCODED_BRACE.length) ===
+                            ENCODED_BRACE
                         ) {
-                            return buildState(
-                                part.substr(ARG_AVATAR.length + 1)
-                            );
+                            /**
+                             * ?avatar begins with {, build state
+                             */
+                            return buildState(part[1]);
                         }
 
-                        reference = decodeURIComponent(
-                            part.substr(ARG_AVATAR.length + 1)
-                        );
-
+                        /**
+                         * ?avatar doesn't begin with {, check API
+                         */
                         request(
                             {
                                 data: {
-                                    avatar: reference
+                                    avatar: part[1]
                                 },
                                 dataType: "json",
                                 method: "GET",
@@ -703,11 +700,7 @@ function getLoaded(category) {
                                     ) &&
                                     response.json
                                 ) {
-                                    json_to_reference[
-                                        response.json
-                                    ] = reference;
-
-                                    shareAvatar(reference);
+                                    json_to_reference[response.json] = part[1];
 
                                     return buildState(response.json);
                                 }
@@ -722,6 +715,9 @@ function getLoaded(category) {
                     return false;
                 })
         ) {
+            /**
+             * URL didn't contain an avatar GET argument
+             */
             buildState();
         }
 
@@ -807,29 +803,25 @@ function getLoaded(category) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+    /**
+     * get all input/select's that aren't ranges
+     */
     var inputs_r_i = 0;
     var inputs_r = document.querySelectorAll(
         "select,input:not([type='range'])"
     );
 
+    /**
+     * loop through inputs, map into object by input ID
+     */
     for (inputs_r_i; inputs_r_i < inputs_r.length; inputs_r_i += 1) {
         inputs[inputs_r[inputs_r_i].id.replace(/-/g, "_")] =
             inputs_r[inputs_r_i];
     }
-    inputs.share.value = "";
 
-    color_two = document.getElementById("color-two");
-    linear1 = document.getElementById("linear1");
-    linear2 = document.getElementById("linear2");
-    radial1 = document.getElementById("radial1");
-    radial2 = document.getElementById("radial2");
-
-    document.getElementById("ziad").addEventListener("click", function () {
-        setTimeout(function () {
-            document.querySelector("#random").classList.remove("d-none");
-        }, 100);
-    });
-
+    /**
+     * check if any are missing in long_to_short
+     */
     Object.keys(inputs).forEach(function (name) {
         if (["share"].indexOf(name) === -1) {
             if (inputs[name] === null) {
@@ -841,11 +833,34 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    /**
+     * get specific case elements
+     */
+    color_two = document.getElementById("color-two");
+    linear1 = document.getElementById("linear1");
+    linear2 = document.getElementById("linear2");
+    radial1 = document.getElementById("radial1");
+    radial2 = document.getElementById("radial2");
+
+    /**
+     * listen for click on ziad credit
+     */
+    document.getElementById("ziad").addEventListener("click", function () {
+        setTimeout(function () {
+            document.querySelector("#random").classList.remove("d-none");
+        }, 100);
+    });
+
+    /**
+     * prepare canvas/context
+     */
     canvas = document.getElementById("canvas");
     canvas.width = 600;
     canvas.height = 600;
-
     context = canvas.getContext("2d");
 
+    /**
+     * begin loading
+     */
     getLoaded();
 });
