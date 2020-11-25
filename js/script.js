@@ -6,6 +6,7 @@ var ARG_AVATAR = "avatar";
 var MAX_RGB_VALUE = 16777215;
 var HEX = 16;
 var ENCODED_BRACE = encodeURIComponent("{");
+var RANDOMIZE_DELAY = 500; // half a second
 
 var json_to_reference = {};
 var directories = {
@@ -546,6 +547,11 @@ function randomize(button, targets) {
     var has_block;
 
     if (button.tagName === "BUTTON") {
+        button.disabled = true;
+        setTimeout(function () {
+            button.disabled = false;
+        }, RANDOMIZE_DELAY);
+
         has_block = button.classList.contains("btn-block");
         button.classList = ["btn", btn_class].join(" ");
 
