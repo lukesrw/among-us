@@ -18,8 +18,8 @@ module.exports = handle => {
         let response = {
             data: {
                 error: false,
-                reference: null,
-                json: null
+                json: null,
+                reference: null
             }
         };
 
