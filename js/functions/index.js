@@ -7,8 +7,7 @@ var path = require("path");
 
 module.exports = function (handle) {
     return new Promise(function (resolve) {
-        var file = handle.getUrl(void 0, true);
-        file = file.pathname.split("/").pop();
+        var file = handle.getUrl().pathname.split("/").pop();
 
         return fs.promises
             .readFile(
@@ -26,11 +25,11 @@ module.exports = function (handle) {
             )
             .then(function (data) {
                 return resolve({
+                    data: data,
                     headers: {
-                        "Content-Type": "text/javascript",
-                        "Content-Length": data.length
-                    },
-                    data: data
+                        "Content-Length": data.length,
+                        "Content-Type": "text/javascript"
+                    }
                 });
             })
             .catch(function () {
