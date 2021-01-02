@@ -1,9 +1,11 @@
+import { join } from "path";
+import { Request, RequestHandle } from "../../modules/host/class/Request";
+
 const sqlite = require("sqlite3").verbose();
-const { join } = require("path");
 
 const HEX = 16;
 
-module.exports = handle => {
+export = async (handle: Request): Promise<Partial<RequestHandle>> => {
     return new Promise(resolve => {
         let has_get =
             handle.method === "get" &&
@@ -15,7 +17,13 @@ module.exports = handle => {
             Object.prototype.hasOwnProperty.call(handle.data.post, "avatar") &&
             handle.data.post.avatar.length > 0;
 
-        let response = {
+        let response: {
+            data: {
+                error: boolean;
+                json?: null;
+                reference: string | null;
+            };
+        } = {
             data: {
                 error: false,
                 json: null,
@@ -28,7 +36,7 @@ module.exports = handle => {
                 let database = new sqlite.Database(
                     join(__dirname, "index.db"),
                     sqlite.OPEN_READWRITE | sqlite.OPEN_CREATE, // eslint-disable-line
-                    error => {
+                    (error: any) => {
                         if (error) console.log(error); // eslint-disable-line
                     }
                 );
@@ -52,7 +60,7 @@ module.exports = handle => {
                             WHERE
                                 avatar_reference = ?`,
                             [handle.data.get.avatar],
-                            (error, data) => {
+                            (error: null | string, data: object) => {
                                 response.data = Object.assign(
                                     {
                                         error: Boolean(error),
@@ -77,7 +85,7 @@ module.exports = handle => {
                             WHERE
                                 avatar_json = ?`,
                             [handle.data.post.avatar],
-                            (_1, data) => {
+                            (_1: null | string, data: any) => {
                                 if (data) {
                                     response.data.reference = data.reference;
                                 } else {
@@ -109,7 +117,7 @@ module.exports = handle => {
                 });
             }
         } catch (error) {
-            response.error = error.message;
+            response.data.error = error.message;
         }
 
         return resolve(response);
